@@ -1,0 +1,8 @@
+이움레터 v14 GitHub Pages 게시 안내
+
+1. 이 ZIP의 압축을 풀고 폴더 안 모든 파일/폴더를 새 GitHub 저장소 green565/ium-letter-final 의 루트에 업로드합니다. ZIP 파일 자체를 올리지 마세요.
+2. Settings > Pages > Deploy from a branch > main > /(root) > Save.
+3. 게시 주소: https://green565.github.io/ium-letter-final/
+4. 저장소 이름을 바꾸면 경로 /ium-letter-final/ 도 함께 수정해야 합니다.
+5. GitHub Pages는 정적 호스팅입니다. 서버측 API/공유 데이터 저장은 별도 서버가 필요합니다. 원본 v14는 브라우저 메모리 기반 시연 모드이므로 새로고침 시 입력 데이터가 초기화될 수 있습니다.
+6. 내부 페이지 직접 접근은 404.html SPA fallback에 의존합니다. GitHub Pages에서 404 응답으로 제공되므로 일부 환경에서 직접 접근/새로고침에 제약이 있을 수 있습니다.
