@@ -1,0 +1,2244 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>이움레터 부고장 제작</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&amp;family=Noto+Serif+KR:wght@400;600;700&amp;display=swap">
+<style>
+body{margin:0;background:#F8F4EE;color:#2D2A27;font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:#2B2B2D}a:hover{color:#111112}
+*{box-sizing:border-box}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+button:disabled{cursor:not-allowed;opacity:.5}
+:focus-visible{outline:2px solid #2B2B2D;outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.app{min-height:100vh;display:flex;flex-direction:column}
+.serif{font-family:'Noto Serif KR','Nanum Myeongjo',serif}
+/* header */
+.top{position:sticky;top:0;z-index:30;background:rgba(248,244,238,.96);border-bottom:1px solid #E7DFD4}
+.top-in{max-width:1240px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;background:none;border:0;padding:4px 0;min-height:44px}
+.brand-mark{width:46px;height:30px}
+.brand-mark circle{fill:none;stroke:#8B2635;stroke-width:3.2}
+.brand-text{display:flex;flex-direction:column;align-items:flex-start;line-height:1}
+.brand-ko{font-family:'Noto Serif KR',serif;font-weight:700;font-size:22px;color:#8B2635;letter-spacing:.04em}
+.brand-en{font-size:9.5px;letter-spacing:.42em;color:#6A635D;margin-top:5px;padding-left:1px}
+.top-nav{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.nav-btn{background:none;border:0;padding:0 12px;min-height:44px;border-radius:8px;font-size:14.5px;color:#4A4541}
+.nav-btn:hover{background:#F1EAE0}
+.nav-btn.on{color:#2B2B2D;font-weight:700}
+.demo-badge{margin-left:6px;font-size:11.5px;color:#111112;background:#EFEFED;border:1px solid #D6D6D3;border-radius:999px;padding:2px 9px;white-space:nowrap}
+/* generic */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 18px;border-radius:10px;border:1px solid #D8CCBF;background:#FFFDF9;color:#2D2A27;font-size:14.5px;font-weight:500;text-decoration:none;white-space:nowrap}
+.btn:hover{border-color:#B9A999;background:#fff}
+.btn.primary{background:#2B2B2D;border-color:#2B2B2D;color:#fff}
+.btn.primary:hover{background:#111112;border-color:#111112}
+.btn.ghost{background:transparent}
+.btn.sm{min-height:38px;padding:0 12px;font-size:13.5px;border-radius:8px}
+.btn.block{width:100%}
+.btn.lg{min-height:52px;font-size:16px;padding:0 24px}
+.btn.soft{background:#EFEFED;border-color:#D6D6D3;color:#111112}
+.btn.danger{color:#B3261E}
+.icon-btn{width:44px;height:44px;flex:0 0 44px;border-radius:10px;border:1px solid #D8CCBF;background:#FFFDF9;font-size:20px;line-height:1;display:inline-flex;align-items:center;justify-content:center;color:#6A635D}
+.icon-btn:hover{color:#B3261E;border-color:#D9A8A3}
+.tag{font-size:12px;color:#6A635D;background:#F1EAE0;border-radius:999px;padding:2px 10px;white-space:nowrap}
+.tag.paid{background:#EFEFED;color:#111112}
+.tag.free{background:#E7F0EA;color:#2F5D45}
+.tag.soon{background:#EDEBE8;color:#5E5852}
+.hint{font-size:13px;color:#6A635D;margin:6px 0 0}
+.err{font-size:13px;color:#B3261E;margin:6px 0 0}
+.okc{color:#2F6B4F}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0;border:0;padding:0;margin:0}
+.field label,.field legend,.lbl{font-size:14px;font-weight:500;color:#3A3633;padding:0}
+.opt{font-weight:400;font-size:12px;color:#6A635D;margin-left:4px}
+.req{font-weight:500;font-size:12px;color:#2B2B2D;margin-left:4px}
+.inp{width:100%;min-height:46px;border:1px solid #D8CCBF;border-radius:10px;background:#fff;padding:10px 12px;font-size:15px}
+.inp:focus{border-color:#2B2B2D;outline:none;box-shadow:0 0 0 3px rgba(43,43,45,.14)}
+.inp.bad{border-color:#B3261E}
+textarea.inp{resize:vertical;line-height:1.65}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:14px}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.row.between{justify-content:space-between}
+.stack{display:flex;flex-direction:column;gap:12px}
+.muted{color:#6A635D}
+.small{font-size:13px}
+.panel{background:#FFFDF9;border:1px solid #E7DFD4;border-radius:14px;padding:22px}
+.panel h2{font-size:17px;margin:0;font-weight:700}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.notice{font-size:12.5px;color:#6A635D;background:#F1EAE0;border-radius:10px;padding:10px 12px;margin:10px 0 0;line-height:1.6}
+.notice.demo{background:#EFEFED;color:#333335}
+/* workspace */
+.ws{width:100%;max-width:1240px;margin:0 auto;padding:24px 20px 120px;display:grid;gap:32px;align-items:start}
+.ws.split{grid-template-columns:minmax(0,1fr) minmax(340px,420px)}
+.ws.solo{grid-template-columns:minmax(0,480px);justify-content:center}
+.ws.solo .ws-left{display:none}
+.ws-right{position:sticky;top:76px}
+.ws.solo .ws-right{position:static}
+.preview-label{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#6A635D;margin:0 0 8px}
+.phone{background:#fff;border:1px solid #E1D8CC;border-radius:22px;overflow:auto;max-height:calc(100vh - 120px);box-shadow:0 8px 28px rgba(60,40,30,.07)}
+.ws.solo .phone{max-height:none;border-radius:18px}
+.page-title{font-size:24px;margin:0;font-weight:700;letter-spacing:-.01em}
+.page-sub{margin:4px 0 0;color:#6A635D;font-size:14.5px}
+.editor-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.step{background:#FFFDF9;border:1px solid #E7DFD4;border-radius:16px;padding:22px;margin-bottom:18px}
+.step-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.step-num{width:38px;height:38px;border-radius:50%;background:#2B2B2D;color:#fff;font-family:'Noto Serif KR',serif;font-size:19px;font-weight:700;display:inline-flex;align-items:center;justify-content:center}
+.step-head h2{margin:0;font-size:19px;font-weight:700}
+.sub{padding:20px 0;border-top:1px solid #EEE6DB}
+.sub:first-of-type{border-top:0;padding-top:4px}
+.sub-title{font-size:16px;font-weight:700;margin:0 0 12px;color:#2D2A27}
+.sub-desc{font-size:13px;color:#6A635D;margin:-6px 0 12px}
+/* chat */
+.chat{border:1px solid #E1D8CC;border-radius:14px;background:#fff;overflow:hidden}
+.chat.drag{border-color:#2B2B2D;box-shadow:0 0 0 3px rgba(43,43,45,.14)}
+.chat-log{max-height:340px;min-height:160px;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#FBF8F3}
+.msg{max-width:88%;padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.65}
+.msg.ai{background:#fff;border:1px solid #E7DFD4;align-self:flex-start;border-top-left-radius:4px}
+.msg.user{background:#2B2B2D;color:#fff;align-self:flex-end;border-top-right-radius:4px}
+.msg-text{margin:0;white-space:pre-line;word-break:keep-all;overflow-wrap:anywhere}
+.msg-imgs{display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.msg-imgs img{width:96px;height:96px;object-fit:cover;border-radius:8px;border:1px solid rgba(255,255,255,.4)}
+.msg-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.demo-note{display:inline-block;margin-top:6px;font-size:11.5px;color:#111112;background:#EFEFED;border-radius:999px;padding:1px 8px}
+.msg.busy{color:#6A635D}
+.chip-row{display:flex;gap:6px;flex-wrap:wrap;padding:12px 14px 0;background:#fff}
+.chip{border:1px solid #E1D8CC;background:#FFFDF9;border-radius:999px;padding:0 12px;min-height:34px;font-size:13px;color:#4A4541}
+.chip:hover{border-color:#2B2B2D;color:#2B2B2D}
+.chip.strong{background:#2B2B2D;border-color:#2B2B2D;color:#fff;font-weight:500}
+.chip.strong:hover{background:#111112;color:#fff}
+.chip.on{border-color:#2B2B2D;color:#2B2B2D;background:#EFEFED}
+.chat-input{padding:12px 14px 14px;background:#fff}
+.chat-input textarea{border:1px solid #D8CCBF;border-radius:10px;width:100%;padding:10px 12px;min-height:72px;resize:vertical;font-size:14.5px;line-height:1.6;background:#fff}
+.chat-input textarea:focus{outline:none;border-color:#2B2B2D;box-shadow:0 0 0 3px rgba(43,43,45,.14)}
+.chat-tools{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.drop-hint{font-size:12.5px;color:#6A635D;flex:1 1 120px}
+.file-btn{cursor:pointer}
+/* design cards */
+.design-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.design-card{display:flex;flex-direction:column;align-items:stretch;gap:6px;padding:10px;border:1px solid #E1D8CC;border-radius:12px;background:#fff;text-align:left}
+.design-card.on{border-color:#2B2B2D;box-shadow:0 0 0 2px #2B2B2D}
+.design-name{font-weight:700;font-size:14px}
+.design-desc{font-size:12px;color:#6A635D;line-height:1.45}
+.mini{height:118px;position:relative;overflow:hidden;display:block;border:1px solid #D4D4D1}
+.mini-img{position:absolute;display:block;object-fit:cover}
+.mini-img-light{display:none}
+.mini-frame{position:absolute;display:flex;flex-direction:column;align-items:center;gap:5px}
+.mini-line{display:block;height:3px;border-radius:0}
+.mini-line.l1{width:58%;height:6px}.mini-line.l2{width:74%}.mini-line.l3{width:46%}
+.mini-rows{position:absolute;display:none;flex-direction:column;gap:4px}
+.mini-rows span{display:block;height:2px}
+.mini-chrys{background:#1D1E20}
+.mini-chrys .mini-img-dark{top:0;left:0;width:100%;height:56%;object-position:62% 46%;opacity:.9}
+.mini-chrys .mini-frame{left:16%;right:16%;top:38%;bottom:12%;justify-content:center;background:rgba(29,30,32,.92);border:1px solid rgba(255,255,255,.55);outline:1px solid rgba(255,255,255,.25);outline-offset:2px}
+.mini-chrys .mini-line{background:#8E8C88}.mini-chrys .mini-line.l1{background:#F2F0EC}
+.mini-mj{background:#fff}
+.mini-mj .mini-img-dark{display:none}
+.mini-mj .mini-img-light{display:block;top:7px;left:7px;right:7px;width:calc(100% - 14px);height:20%;object-position:50% 58%}
+.mini-mj .mini-frame{left:7px;right:7px;top:30%;height:36%;justify-content:center;border:1px solid #C9C9C6}
+.mini-mj .mini-line{background:#B5B5B2}.mini-mj .mini-line.l1{background:#1F1F20}
+.mini-mj .mini-rows{display:flex;left:10px;right:40%;bottom:9px}
+.mini-mj .mini-rows span{background:#C4C4C1}
+.mini-warm{background:#2B2C2E}
+.mini-warm .mini-img-dark{top:0;right:0;width:64%;height:58%;object-position:64% 40%;opacity:.9}
+.mini-warm .mini-frame{left:12px;top:58%;bottom:12px;width:58%;align-items:flex-start;padding-left:7px;border-left:1px solid rgba(255,255,255,.45)}
+.mini-warm .mini-line{background:#8F8D89}.mini-warm .mini-line.l1{background:#EFEEEA;width:78%}.mini-warm .mini-line.l2{width:92%}
+.tmini{height:92px;border:1px solid #D4D4D1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.tmini .mini-line{background:#C4C4C1}.tmini .mini-line.l1{background:#2D2A27;width:40%;height:6px}.tmini .mini-line.l2{width:60%}.tmini .mini-line.l3{width:36%}
+.tmini-classic{background:#fff;outline:1px solid #DDD;outline-offset:-6px}
+.tmini-warm{background:#F4EEE5}
+/* religion */
+.religion-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));gap:8px}
+.rel-opt{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid #E1D8CC;border-radius:10px;background:#fff;cursor:pointer;min-height:44px}
+.rel-opt.on{border-color:#2B2B2D;background:#F4F4F2}
+.rel-opt input{margin-top:4px;accent-color:#2B2B2D}
+.rel-text{display:flex;flex-direction:column;line-height:1.4}
+.rel-label{font-size:14.5px;font-weight:500}
+.rel-hint{font-size:12.5px;color:#7A736C}
+/* mourners & accounts */
+.mrow{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr) 44px;gap:8px;margin-bottom:8px}
+.arow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) minmax(0,1fr) 44px;gap:8px;margin-bottom:8px}
+.empty-line{font-size:13.5px;color:#6A635D;padding:12px;border:1px dashed #D8CCBF;border-radius:10px;margin:0 0 10px}
+/* hall search */
+.hall-wrap{position:relative}
+.hall-results{position:absolute;left:0;right:0;top:100%;margin-top:4px;background:#fff;border:1px solid #D8CCBF;border-radius:12px;box-shadow:0 10px 30px rgba(40,30,20,.12);z-index:20;overflow:hidden}
+.hall-item{display:flex;flex-direction:column;align-items:flex-start;width:100%;border:0;border-bottom:1px solid #F0E9DF;background:#fff;padding:10px 14px;text-align:left;min-height:44px}
+.hall-item:hover{background:#F5F5F3}
+.hall-item-name{font-weight:500;font-size:14.5px}
+.hall-item-addr{font-size:12.5px;color:#6A635D}
+.hall-note{font-size:12px;color:#6A635D;padding:8px 14px;background:#FBF8F3;margin:0}
+/* switch */
+.switch-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 16px;border:1px solid #E7DFD4;border-radius:12px;background:#fff;margin-top:14px}
+.switch-title{margin:0;font-weight:500;font-size:14.5px}
+.switch{width:52px;height:30px;flex:0 0 52px;border-radius:999px;border:0;background:#CFC6BB;position:relative;padding:0;transition:background .15s}
+.switch .knob{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .15s}
+.switch.on{background:#2B2B2D}
+.switch.on .knob{left:25px}
+.switch-state{font-size:12.5px;color:#6A635D;min-width:22px;text-align:right}
+/* guides */
+.guide-list{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+/* photo */
+.drop{border:1.5px dashed #D0C3B4;border-radius:12px;background:#FBF8F3;padding:22px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.drop.drag{border-color:#2B2B2D;background:#F0F0EE}
+.photo-edit{display:grid;grid-template-columns:140px minmax(0,1fr);gap:18px;align-items:start}
+.photo-box{width:140px;height:140px;border-radius:50%;overflow:hidden;background:#EEE7DD;border:1px solid #D8CCBF}
+.photo-box img{width:100%;height:100%;object-fit:cover;display:block;transform-origin:center}
+.range-row{display:grid;grid-template-columns:64px minmax(0,1fr);align-items:center;gap:8px;font-size:13.5px}
+.range-row input{accent-color:#2B2B2D;width:100%;min-height:32px}
+/* submit bar */
+.submit-bar{position:sticky;bottom:0;z-index:10;background:rgba(248,244,238,.97);padding:14px 0 16px;border-top:1px solid #E7DFD4;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.submit-bar .btn.primary{flex:1 1 220px}
+/* mobile tabs */
+.mtabs{display:none}
+/* ===== recipient-facing obituary card (monochrome) ===== */
+.card{container-type:inline-size;--c-bg:#1D1E20;--c-fg:#F2F0EC;--c-sub:#BDBAB4;--c-line:rgba(255,255,255,.16);--c-line2:rgba(255,255,255,.34);--c-tint:rgba(255,255,255,.05);--c-strong:rgba(255,255,255,.62);--c-hover:rgba(255,255,255,.08);background:var(--c-bg);color:var(--c-fg);font-family:'Noto Sans KR',sans-serif;min-height:100%;padding-bottom:8px}
+.d-mj{--c-bg:#FFFFFF;--c-fg:#1F1F20;--c-sub:#5C5C5E;--c-line:#E3E3E0;--c-line2:#BDBDBA;--c-tint:#F5F5F3;--c-strong:#2A2A2B;--c-hover:#F1F1EF}
+.d-warm{--c-bg:#2B2C2E;--c-fg:#EFEEEA;--c-sub:#BEBCB7;--c-line:rgba(255,255,255,.13);--c-line2:rgba(255,255,255,.32);--c-tint:rgba(255,255,255,.05);--c-strong:rgba(255,255,255,.58);--c-hover:rgba(255,255,255,.07)}
+.c-hero{position:relative;isolation:isolate}
+.c-bloom{position:relative;z-index:0;overflow:hidden;background:#151617}
+.c-bloom img{display:block;width:100%;height:100%;object-fit:cover}
+.c-bloom-light{display:none !important}
+.c-bloom::after{content:"";position:absolute;inset:0;pointer-events:none}
+.c-frame{position:relative;z-index:1;text-align:center}
+.c-emblem{display:block;width:30px;height:30px;margin:0 auto 10px;color:var(--c-sub)}
+.c-emblem ellipse,.c-emblem circle{fill:none;stroke:currentColor;stroke-width:.8}
+.c-kicker{font-family:'Noto Serif KR',serif;font-size:14px;letter-spacing:.32em;padding-left:.32em;color:var(--c-sub);margin:0 0 18px}
+.c-photo{width:112px;height:140px;margin:0 auto 20px;overflow:hidden;background:#3A3B3D;border:1px solid var(--c-line2);outline:3px solid var(--c-bg);outline-offset:-4px}
+.c-photo img{width:100%;height:100%;object-fit:cover;display:block;transform-origin:center}
+.c-name{font-family:'Noto Serif KR',serif;font-weight:600;font-size:clamp(25px,8.6cqi,32px);line-height:1.5;padding:.06em 0;margin:0;letter-spacing:.01em;word-break:keep-all;overflow-wrap:anywhere;overflow:visible;height:auto;color:var(--c-fg)}
+.c-name.long{font-size:clamp(22px,7cqi,28px)}
+.c-go,.c-nim{white-space:nowrap}
+.c-nm{overflow-wrap:anywhere}
+.c-name.ph{opacity:.45}
+.c-age{margin:8px 0 0;color:var(--c-sub);font-size:14.5px}
+.c-rule{display:block;width:32px;height:1px;background:var(--c-line2);margin:20px auto}
+.c-lead{margin:0;font-size:15px;line-height:1.85;overflow-wrap:anywhere;color:var(--c-fg);opacity:.9}
+.c-body{padding:8px 24px 16px}
+.c-sec{padding:24px 0;border-top:1px solid var(--c-line)}
+.c-h{font-family:'Noto Serif KR',serif;font-size:15px;font-weight:600;color:var(--c-fg);margin:0 0 14px;letter-spacing:.06em}
+.c-mrow{display:grid;grid-template-columns:72px minmax(0,1fr);gap:8px;padding:3px 0;font-size:15.5px}
+.c-rel{color:var(--c-sub)}
+.c-mname{font-weight:500}
+.c-hall{margin:0;font-size:17px;font-weight:700;word-break:keep-all;font-family:'Noto Serif KR',serif}
+.c-addr{margin:6px 0 0;font-size:14.5px;color:var(--c-sub);word-break:keep-all}
+.c-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:14px}
+.c-link{min-height:44px;padding:0 8px;border:1px solid var(--c-line2);border-radius:0;background:transparent;color:var(--c-fg);font-size:13.5px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;white-space:nowrap}
+.c-link:hover{background:var(--c-hover);color:var(--c-fg)}
+.c-wreath{width:100%;margin-top:10px;min-height:48px;border:1px solid var(--c-strong);background:var(--c-tint);color:var(--c-fg);border-radius:0;font-size:15px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:8px}
+.c-wreath:hover{background:var(--c-hover)}
+.c-wreath svg{width:16px;height:16px}
+.c-wreath svg circle,.c-wreath svg ellipse{fill:none;stroke:currentColor;stroke-width:1}
+.c-sched{margin:0;display:flex;flex-direction:column;gap:8px}
+.c-srow{display:grid;grid-template-columns:72px minmax(0,1fr);gap:8px;font-size:15.5px}
+.c-srow dt{color:var(--c-sub)}
+.c-srow dd{margin:0;font-weight:500;word-break:keep-all}
+.c-msg{margin:0;white-space:pre-line;font-size:15px;line-height:1.9;color:var(--c-fg);word-break:keep-all}
+.c-acc{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border:1px solid var(--c-line);margin-bottom:8px;text-align:left}
+.c-acc p{margin:0}
+.c-acc-meta{font-size:13.5px;color:var(--c-sub)}
+.c-acc-num{font-size:15.5px;font-weight:500;letter-spacing:.02em}
+.c-acc .c-link{flex:0 0 auto;padding:0 14px}
+.c-form{display:flex;flex-direction:column;gap:8px;text-align:left}
+.card .inp{min-height:46px;font-size:15px;background:transparent;color:var(--c-fg);border:1px solid var(--c-line2);border-radius:0}
+.card .inp::placeholder{color:var(--c-sub);opacity:.85}
+.card .inp:focus{border-color:var(--c-strong);box-shadow:none;outline:none}
+.card .err{color:#E8A39C}
+.d-mj .err{color:#B3261E}
+.c-form .c-submit{min-height:46px;border:1px solid var(--c-strong);background:transparent;color:var(--c-fg);font-size:15px;border-radius:0}
+.c-form .c-submit:hover{background:var(--c-hover)}
+.c-cond{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:0;text-align:left;border-top:1px solid var(--c-line)}
+.c-cond-item{padding:14px 2px;border-bottom:1px solid var(--c-line)}
+.c-cond-head{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--c-sub)}
+.c-cond-name{font-weight:700;color:var(--c-fg);font-size:14.5px}
+.c-cond-msg{margin:6px 0 0;font-size:15px;white-space:pre-line;word-break:keep-all}
+.c-empty{font-size:14px;color:var(--c-sub);margin:14px 0 0}
+.c-foot{text-align:center;padding:20px 0 6px;font-size:12px;color:var(--c-sub);letter-spacing:.12em}
+
+/* 1. 국화와 먹빛 (chrys) */
+.d-chrys .c-bloom{height:236px}
+.d-chrys .c-bloom img{object-position:62% 46%}
+.d-chrys .c-bloom::after{background:linear-gradient(to bottom,rgba(29,30,32,0) 40%,rgba(29,30,32,.85) 82%,#1D1E20 100%)}
+.d-chrys .c-frame{margin:-70px 22px 0;padding:34px 18px 32px;background:rgba(29,30,32,.9);border:1px solid rgba(255,255,255,.44);outline:1px solid rgba(255,255,255,.22);outline-offset:5px}
+.d-chrys .c-body{padding:28px 24px 16px}
+.d-chrys .c-sec{text-align:center}
+.d-chrys .c-h{display:flex;align-items:center;justify-content:center;gap:12px}
+.d-chrys .c-h::before,.d-chrys .c-h::after{content:"";width:22px;height:1px;background:var(--c-line2)}
+.d-chrys .c-mrow,.d-chrys .c-srow{display:flex;justify-content:center;gap:14px}
+.d-chrys .c-acc{text-align:left}
+.d-chrys.has-photo .c-bloom{height:150px}
+.d-chrys.has-photo .c-bloom img{opacity:.55}
+.d-chrys.has-photo .c-emblem{display:none}
+.d-chrys.has-photo .c-frame{margin-top:-46px}
+
+/* 2. 백색 추모 (mj) */
+.d-mj .c-bloom{height:118px;margin:16px 16px 0;background:#EEE}
+.d-mj .c-bloom-dark{display:none !important}
+.d-mj .c-bloom-light{display:block !important;object-position:50% 58%}
+.d-mj .c-bloom::after{background:linear-gradient(to bottom,rgba(255,255,255,0) 55%,rgba(255,255,255,.55) 100%)}
+.d-mj .c-frame{margin:14px 16px 0;padding:32px 18px 30px;border:1px solid #CFCFCC}
+.d-mj .c-photo{background:#EEE;border-color:#BDBDBA;outline-color:#fff}
+.d-mj .c-body{padding:6px 16px 16px}
+.d-mj .c-body > .c-sec{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;padding:20px 4px}
+.d-mj .c-body > .c-sec:first-child{border-top:0}
+.d-mj .c-h{margin:2px 0 0;font-size:14.5px}
+.d-mj .c-mrow{grid-template-columns:58px minmax(0,1fr)}
+.d-mj .c-srow{grid-template-columns:44px minmax(0,1fr)}
+.d-mj .c-links{grid-template-columns:repeat(3,minmax(0,1fr))}
+.d-mj .c-foot{grid-column:1 / -1}
+.d-mj.has-photo .c-bloom{height:64px}
+
+/* 3. 여백과 추모 (warm) */
+.d-warm .c-bloom{position:absolute;top:0;right:0;width:66%;height:224px}
+.d-warm .c-bloom img{object-position:64% 40%}
+.d-warm .c-bloom::after{background:linear-gradient(to right,#2B2C2E 0%,rgba(43,44,46,.55) 30%,rgba(43,44,46,0) 60%),linear-gradient(to bottom,rgba(43,44,46,0) 55%,#2B2C2E 100%)}
+.d-warm .c-frame{position:relative;z-index:1;text-align:left;margin:0 24px;padding:236px 0 36px 20px;border-left:1px solid rgba(255,255,255,.34)}
+.d-warm .c-emblem{display:none}
+.d-warm .c-kicker{margin-bottom:22px}
+.d-warm .c-name{font-size:clamp(25px,8.8cqi,34px)}
+.d-warm .c-name.long{font-size:clamp(22px,7.2cqi,29px)}
+.d-warm .c-rule{margin:22px 0;width:40px}
+.d-warm .c-body{padding:4px 24px 16px}
+.d-warm .c-body > .c-sec{display:grid;grid-template-columns:62px minmax(0,1fr);gap:0 18px;padding:22px 0}
+.d-warm .c-body > .c-sec > :last-child{border-left:1px solid var(--c-line2);padding-left:18px;min-width:0}
+.d-warm .c-h{margin:2px 0 0;font-size:14.5px}
+.d-warm .c-mrow{grid-template-columns:58px minmax(0,1fr)}
+.d-warm .c-srow{grid-template-columns:44px minmax(0,1fr)}
+.d-warm .c-links{grid-template-columns:repeat(auto-fit,minmax(min(84px,100%),1fr))}
+.d-warm.has-photo .c-bloom{width:52%;height:200px;right:auto;left:0}
+.d-warm.has-photo .c-bloom img{opacity:.35}
+.d-warm.has-photo .c-bloom::after{background:linear-gradient(to left,#2B2C2E 0%,rgba(43,44,46,0) 70%),linear-gradient(to bottom,rgba(43,44,46,0) 50%,#2B2C2E 100%)}
+.d-warm .c-photo{position:absolute;top:36px;right:0;margin:0;width:120px;height:150px}
+@media (max-width:360px){.c-links{grid-template-columns:1fr 1fr}}
+/* thanks card */
+.tcard{min-height:100%;padding:28px 20px}
+.t-inner{text-align:center;padding:40px 26px 36px}
+.t-kicker{font-family:'Noto Serif KR',serif;letter-spacing:.6em;padding-left:.6em;font-size:12px;color:#7A736C;margin:0 0 10px}
+.t-title{font-family:'Noto Serif KR',serif;font-size:27px;font-weight:600;margin:0}
+.t-deceased{margin:14px 0 0;font-family:'Noto Serif KR',serif;font-size:16px;color:#4A4541}
+.t-rule{width:40px;height:1px;background:#C9BBA8;margin:22px auto}
+.t-msg{margin:0;white-space:pre-line;font-size:15px;line-height:1.95;word-break:keep-all;color:#3A3633}
+.t-sign{margin-top:28px;font-size:14px;color:#4A4541}
+.t-sign p{margin:2px 0}
+.t-from{font-weight:500}
+.t-classic{background:#fff}
+.t-classic .t-inner{border:1px solid #E4DCD1;outline:1px solid #E4DCD1;outline-offset:-8px;padding:48px 28px 44px}
+.t-classic .t-msg{font-family:'Noto Serif KR',serif}
+.t-warm{background:#F4EEE5}
+.t-warm .t-inner{background:#FFFDF9;border-radius:22px}
+.t-warm .t-kicker{color:#8B4A3C}
+.t-warm .t-title{font-family:'Noto Sans KR',sans-serif;font-weight:700;font-size:24px;color:#6E3A2F}
+.t-warm .t-rule{background:#E2C9B8;width:56px;height:2px;border-radius:2px}
+/* manage */
+.status-row{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 18px}
+.link-box{display:flex;gap:8px;margin-top:12px}
+.link-box .inp{flex:1 1 auto;font-size:13.5px;color:#4A4541;background:#FBF8F3}
+.action-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(160px,100%),1fr));gap:8px;margin-top:14px}
+.log-item{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:8px 0;border-top:1px solid #EEE6DB}
+/* generic page container */
+.page{width:100%;max-width:960px;margin:0 auto;padding:24px 20px 120px}
+.back{background:none;border:0;color:#6A635D;padding:0;min-height:40px;font-size:14px;display:inline-flex;align-items:center;gap:4px}
+.back:hover{color:#2B2B2D}
+.list-card{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+.list-card h2{font-family:'Noto Serif KR',serif;font-size:19px;margin:0}
+.view-bar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+/* stepper */
+.stepper{display:flex;gap:4px;list-style:none;padding:0;margin:16px 0 22px;flex-wrap:wrap}
+.stepper li{flex:1 1 100px;font-size:13px;color:#8A827A;border-top:3px solid #E1D8CC;padding-top:8px}
+.stepper li.on{color:#2B2B2D;border-color:#2B2B2D;font-weight:700}
+.stepper li.done{color:#4A4541;border-color:#9A9A97}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tab{border:1px solid #E1D8CC;background:#fff;border-radius:999px;padding:0 14px;min-height:40px;font-size:14px}
+.tab.on{background:#2D2A27;color:#fff;border-color:#2D2A27}
+.rtable{border:1px solid #E7DFD4;border-radius:12px;overflow:hidden;background:#fff}
+.rrow{display:grid;grid-template-columns:44px minmax(0,1fr) minmax(0,1.2fr) 104px 96px;gap:8px;align-items:center;padding:8px 10px;border-top:1px solid #F0E9DF}
+.rrow.head{border-top:0;background:#FBF8F3;font-size:12.5px;color:#6A635D;font-weight:500;padding:10px}
+.rrow .inp{min-height:40px;font-size:14px;padding:6px 10px}
+.rrow input[type=checkbox]{width:20px;height:20px;accent-color:#2B2B2D;margin:0 auto;display:block}
+.badge{font-size:12px;border-radius:999px;padding:2px 8px;text-align:center;white-space:nowrap}
+.b-ok{background:#E7F0EA;color:#2F5D45}
+.b-dup{background:#EDEBE8;color:#5E5852}
+.b-invalid,.b-missing{background:#FBE9E7;color:#9E2A20}
+.b-check{background:#FFF2D9;color:#7A4A00}
+.b-fail{background:#FBE9E7;color:#9E2A20}
+.r-actions{display:flex;gap:4px;justify-content:flex-end}
+.summary{display:flex;gap:14px;flex-wrap:wrap;font-size:13.5px;color:#4A4541;margin:12px 0}
+.summary strong{color:#2D2A27}
+.cost{display:grid;grid-template-columns:1fr auto;gap:6px 16px;font-size:14.5px;margin:0}
+.cost dt{color:#6A635D}
+.cost dd{margin:0;text-align:right;font-weight:500}
+.cost .total{font-size:17px;font-weight:700;color:#2B2B2D}
+.radio-card{display:flex;gap:10px;align-items:flex-start;border:1px solid #E1D8CC;border-radius:12px;padding:12px 14px;background:#fff;margin-bottom:8px;cursor:pointer}
+.radio-card.on{border-color:#2B2B2D;background:#F4F4F2}
+.radio-card.off{opacity:.65;cursor:not-allowed}
+.radio-card input{margin-top:4px;accent-color:#2B2B2D}
+.check-line{display:flex;gap:10px;align-items:flex-start;font-size:14px;margin:14px 0}
+.check-line input{width:20px;height:20px;margin-top:1px;accent-color:#2B2B2D}
+.result-hero{text-align:center;padding:28px 10px}
+.result-hero h2{font-size:22px;margin:8px 0 4px}
+.progress{height:8px;border-radius:99px;background:#EEE6DB;overflow:hidden;margin:18px auto;max-width:420px}
+.progress span{display:block;height:100%;background:#2B2B2D;transition:width .2s}
+/* products */
+.prod-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr));gap:14px}
+.prod{display:flex;flex-direction:column;align-items:stretch;text-align:left;border:1px solid #E1D8CC;border-radius:14px;background:#fff;padding:0;overflow:hidden}
+.prod.on{border-color:#2B2B2D;box-shadow:0 0 0 2px #2B2B2D}
+.prod-vis{height:150px;background:#F2F2F0;display:flex;align-items:center;justify-content:center;color:#6E6E6C}
+.prod-vis svg{width:96px;height:110px}
+.ill{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.ill .f{fill:#FFFDF9}
+.ill .fl{fill:#fff;stroke:#A9A9A6}
+.ill .ac{fill:#E4E4E1;stroke:#A9A9A6}
+.prod-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:4px}
+.prod-name{font-weight:700;font-size:15.5px;margin:0}
+.prod-price{font-weight:700;color:#2B2B2D;margin:0}
+.prod-desc{font-size:13px;color:#6A635D;margin:0;line-height:1.55}
+.ribbon-list{display:flex;gap:6px;flex-wrap:wrap}
+.info-list{margin:0;display:grid;grid-template-columns:96px minmax(0,1fr);gap:6px 12px;font-size:14px}
+.info-list dt{color:#6A635D}
+.info-list dd{margin:0;font-weight:500;word-break:keep-all}
+.qty{display:inline-flex;align-items:center;border:1px solid #D8CCBF;border-radius:10px;overflow:hidden;background:#fff}
+.qty button{width:44px;height:44px;border:0;background:#FBF8F3;font-size:18px}
+.qty input{width:72px;height:44px;border:0;text-align:center;font-size:15px}
+.two-col{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,340px);gap:24px;align-items:start}
+.sticky-sum{position:sticky;top:84px}
+/* toast & modal */
+.toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%);background:#2D2A27;color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;z-index:60;max-width:calc(100% - 32px);box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.overlay{position:fixed;inset:0;background:rgba(30,22,18,.42);z-index:70;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:#FFFDF9;border-radius:18px;max-width:420px;width:100%;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.2);max-height:calc(100vh - 32px);overflow:auto}
+.modal h2{margin:0 0 8px;font-size:18px}
+.kakao-card{border:1px solid #E1D8CC;border-radius:14px;overflow:hidden;background:#fff;margin:14px 0}
+.kakao-thumb{height:120px;background:linear-gradient(#F6F0E6,#EFE6D8);display:flex;align-items:center;justify-content:center}
+.kakao-thumb svg{width:60px;height:40px}
+.kakao-thumb circle{fill:none;stroke:#8B2635;stroke-width:2.6}
+.kakao-body{padding:12px 14px}
+.kakao-body p{margin:0}
+.kakao-title{font-weight:700;font-size:15px}
+.kakao-desc{font-size:13px;color:#6A635D;margin-top:2px}
+.kakao-btn{border-top:1px solid #EEE6DB;text-align:center;padding:10px;font-size:14px;color:#4A4541}
+.foot{border-top:1px solid #E7DFD4;padding:18px 20px 90px;text-align:center;font-size:12px;color:#6A635D}
+@media (max-width:900px){
+ .ws.split{grid-template-columns:minmax(0,1fr)}
+ .ws-right{position:static}
+ .phone{max-height:none}
+ .ws.tabbed.tab-edit .ws-right{display:none}
+ .ws.tabbed.tab-preview .ws-left{display:none}
+ .mtabs{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:40;background:#FFFDF9;border-top:1px solid #E1D8CC;padding:8px 12px calc(8px + env(safe-area-inset-bottom));gap:8px}
+ .mtab{flex:1;min-height:46px;border-radius:10px;border:1px solid #D8CCBF;background:#fff;font-size:15px;font-weight:500}
+ .mtab.on{background:#2B2B2D;color:#fff;border-color:#2B2B2D}
+ .submit-bar{bottom:62px}
+ .two-col{grid-template-columns:minmax(0,1fr)}
+ .sticky-sum{position:static}
+}
+@media (max-width:640px){
+ .top-in{padding:8px 14px}
+ .brand-ko{font-size:19px}
+ .brand-mark{width:38px;height:25px}
+ .nav-btn{padding:0 8px;font-size:13.5px}
+ .ws,.page{padding-left:16px;padding-right:16px}
+ .step{padding:18px 16px}
+ .design-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+ .design-desc{display:none}
+ .mrow{grid-template-columns:minmax(0,110px) minmax(0,1fr) 44px}
+ .arow{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 44px}
+ .arow .a-num{grid-column:1 / 3;grid-row:2}
+ .photo-edit{grid-template-columns:minmax(0,1fr)}
+ .rrow{grid-template-columns:36px minmax(0,1fr) minmax(0,1fr);row-gap:6px}
+ .rrow.head{display:none}
+ .rrow .r-status{grid-column:2}
+ .rrow .r-actions{grid-column:3}
+ .msg{max-width:94%}
+ .page-title{font-size:21px}
+}
+</style>
+</helmet>
+<div class="app">
+  <header class="top">
+    <div class="top-in">
+      <button type="button" class="brand" onClick="{{goCreate}}" aria-label="이움레터, 부고장 제작으로 이동">
+        <svg class="brand-mark" viewBox="0 0 64 40" aria-hidden="true"><circle cx="23" cy="20" r="15"></circle><circle cx="41" cy="20" r="15"></circle></svg>
+        <span class="brand-text"><span class="brand-ko">이움레터</span><span class="brand-en">IUM LETTER</span></span>
+      </button>
+      <nav class="top-nav" aria-label="주요 메뉴">
+        <button type="button" class="nav-btn {{navCreateCls}}" onClick="{{goCreate}}">부고장 만들기</button>
+        <button type="button" class="nav-btn {{navListCls}}" onClick="{{goList}}">내 부고장</button>
+        <span class="demo-badge" title="실제 결제·문자·주문이 발생하지 않는 데모입니다">데모</span>
+      </nav>
+    </div>
+  </header>
+
+  <sc-if value="{{storageWarn}}" hint-placeholder-val="{{ false }}">
+    <p class="notice" style="max-width: 1200px; margin: 12px auto 0; width: calc(100% - 32px)">이 환경에서는 브라우저 저장소를 쓸 수 없어 새로고침하면 입력 내용이 사라질 수 있어요.</p>
+  </sc-if>
+
+  <sc-if value="{{wsOn}}" hint-placeholder-val="{{ true }}">
+  <main class="ws {{wsCls}}">
+    <div class="ws-left">
+
+      <!-- ===================== 부고장 제작 ===================== -->
+      <sc-if value="{{isCreate}}" hint-placeholder-val="{{ true }}">
+        <div class="editor-head">
+          <div>
+            <h1 class="page-title">{{createTitle}}</h1>
+            <p class="page-sub">자료를 넣고, 만들어지는 부고장을 보면서, 대화로 고쳐보세요.</p>
+          </div>
+          <button type="button" class="btn ghost sm" onClick="{{askNew}}">새로 작성</button>
+        </div>
+
+        <section class="step" aria-labelledby="step1">
+          <div class="step-head"><span class="step-num" aria-hidden="true">1</span><h2 id="step1">AI 채팅</h2><span class="tag">데모 AI · 예시 문장 중심으로 동작</span></div>
+          <div class="chat {{chatDragCls}}" onDragOver="{{chatDragOver}}" onDragLeave="{{chatDragLeave}}" onDrop="{{chatDrop}}">
+            <div class="chat-log" ref="{{setChatEl}}" aria-live="polite">
+              <sc-for list="{{chat}}" as="m" hint-placeholder-count="1">
+                <div class="msg {{m.cls}}">
+                  <sc-if value="{{m.hasImages}}" hint-placeholder-val="{{ false }}">
+                    <div class="msg-imgs"><sc-for list="{{m.images}}" as="im" hint-placeholder-count="1"><img src="{{im.src}}" alt="채팅에 첨부한 이미지"></sc-for></div>
+                  </sc-if>
+                  <p class="msg-text">{{m.text}}</p>
+                  <sc-if value="{{m.demo}}" hint-placeholder-val="{{ false }}"><span class="demo-note">데모 분석 · 실제 내용 아님</span></sc-if>
+                  <sc-if value="{{m.hasActions}}" hint-placeholder-val="{{ false }}">
+                    <div class="msg-actions"><sc-for list="{{m.actions}}" as="a" hint-placeholder-count="1"><button type="button" class="btn sm {{a.cls}}" onClick="{{a.run}}">{{a.label}}</button></sc-for></div>
+                  </sc-if>
+                </div>
+              </sc-for>
+              <sc-if value="{{chatBusy}}" hint-placeholder-val="{{ false }}"><div class="msg ai busy"><p class="msg-text">내용을 정리하는 중…</p></div></sc-if>
+            </div>
+            <div class="chip-row" aria-label="예시 요청">
+              <button type="button" class="chip strong" onClick="{{runSample}}">예시로 체험하기</button>
+              <sc-for list="{{chatExamples}}" as="ex" hint-placeholder-count="4"><button type="button" class="chip" onClick="{{ex.run}}">{{ex.label}}</button></sc-for>
+            </div>
+            <div class="chat-input">
+              <label for="chat-text" class="sr-only">AI에게 보낼 내용</label>
+              <textarea id="chat-text" rows="3" placeholder="부고 문자나 링크, 사진을 넣어주세요. 필요한 내용을 정리해드릴게요." value="{{chatInput}}" onChange="{{onChatInput}}" onKeyDown="{{onChatKey}}"></textarea>
+              <div class="chat-tools">
+                <label class="btn ghost sm file-btn" for="chat-file">＋ 사진·파일 첨부</label>
+                <input id="chat-file" class="sr-only" type="file" accept="image/*,.txt,text/plain" multiple="" onChange="{{onChatFile}}">
+                <span class="drop-hint">사진·스크린샷·텍스트 파일을 이 영역에 끌어다 놓아도 돼요.</span>
+                <button type="button" class="btn primary sm" onClick="{{sendChat}}" disabled="{{chatSendDisabled}}">보내기</button>
+              </div>
+            </div>
+          </div>
+          <p class="hint">채팅에 올린 사진은 정보 정리용이에요. 고인 사진으로 쓰려면 ‘고인 사진으로 지정’을 누르거나 아래 고인 사진 칸에서 첨부하세요.</p>
+        </section>
+
+        <section class="step" aria-labelledby="step2">
+          <div class="step-head"><span class="step-num" aria-hidden="true">2</span><h2 id="step2">디자인 선택</h2><span class="tag">언제든 바꿀 수 있어요</span></div>
+          <div class="design-grid" role="radiogroup" aria-label="부고장 디자인">
+            <sc-for list="{{designs}}" as="ds" hint-placeholder-count="3">
+              <button type="button" role="radio" aria-checked="{{ds.checked}}" class="design-card {{ds.cls}}" onClick="{{ds.pick}}">
+                <span class="mini mini-{{ds.id}}" aria-hidden="true"><img class="mini-img mini-img-dark" src="./assets/23a2066988ccfafa8bbec11a446ba11b.jpg" alt=""><img class="mini-img mini-img-light" src="./assets/33d5fbcce4cd7d652413f01e1dbaab7f.jpg" alt=""><span class="mini-frame"><span class="mini-line l1"></span><span class="mini-line l2"></span><span class="mini-line l3"></span></span><span class="mini-rows"><span style="width: 100%"></span><span style="width: 80%"></span><span style="width: 90%"></span></span></span>
+                <span class="design-name">{{ds.name}}</span>
+                <span class="design-desc">{{ds.desc}}</span>
+              </button>
+            </sc-for>
+          </div>
+        </section>
+
+        <section class="step" aria-labelledby="step3">
+          <div class="step-head"><span class="step-num" aria-hidden="true">3</span><h2 id="step3">내용 입력</h2><span class="tag">비워 둔 선택 항목은 부고장에 나오지 않아요</span></div>
+
+          <div class="sub">
+            <h3 class="sub-title">고인 정보</h3>
+            <div class="grid2">
+              <div class="field">
+                <label for="f-name">고인 성함<span class="req">필수</span></label>
+                <input id="f-name" class="inp {{nameErrCls}}" type="text" autocomplete="off" placeholder="예: 김영수" value="{{d.name}}" onChange="{{on.name}}" aria-invalid="{{nameInvalid}}" aria-describedby="f-name-err">
+                <sc-if value="{{hasNameErr}}" hint-placeholder-val="{{ false }}"><p id="f-name-err" class="err">{{nameErr}}</p></sc-if>
+              </div>
+              <div class="field">
+                <label for="f-age">향년<span class="opt">선택</span></label>
+                <input id="f-age" class="inp {{ageErrCls}}" type="text" inputmode="numeric" maxlength="3" placeholder="예: 84" value="{{d.age}}" onChange="{{on.age}}">
+                <sc-if value="{{ageErr}}" hint-placeholder-val="{{ false }}"><p class="err">향년은 숫자로 입력해주세요.</p></sc-if>
+              </div>
+              <div class="field">
+                <label for="f-death">별세일<span class="opt">선택</span></label>
+                <input id="f-death" class="inp" type="date" value="{{d.deathDate}}" onChange="{{on.deathDate}}">
+              </div>
+            </div>
+            <fieldset class="field" style="margin-top: 16px">
+              <legend class="lbl" style="margin-bottom: 8px">종교 <span class="opt">첫 문구의 표현이 바뀌어요</span></legend>
+              <div class="religion-list">
+                <sc-for list="{{religions}}" as="rg" hint-placeholder-count="4">
+                  <label class="rel-opt {{rg.cls}}">
+                    <input type="radio" name="religion" value="{{rg.id}}" checked="{{rg.checked}}" onChange="{{rg.pick}}">
+                    <span class="rel-text"><span class="rel-label">{{rg.label}}</span><span class="rel-hint">{{rg.hint}}</span></span>
+                  </label>
+                </sc-for>
+              </div>
+            </fieldset>
+          </div>
+
+          <div class="sub">
+            <h3 class="sub-title">상주</h3>
+            <datalist id="rel-options"><option value="배우자"></option><option value="아들"></option><option value="딸"></option><option value="며느리"></option><option value="사위"></option><option value="손자"></option><option value="손녀"></option><option value="형제"></option><option value="자매"></option></datalist>
+            <p class="sub-desc">관계는 목록에서 고르거나 직접 입력할 수 있어요.</p>
+            <sc-for list="{{mourners}}" as="mr" hint-placeholder-count="1">
+              <div class="mrow">
+                <label class="sr-only" for="{{mr.relId}}">{{mr.relLabel}}</label>
+                <input id="{{mr.relId}}" class="inp" type="text" list="rel-options" placeholder="관계" value="{{mr.rel}}" onChange="{{mr.onRel}}">
+                <label class="sr-only" for="{{mr.nameId}}">{{mr.nameLabel}}</label>
+                <input id="{{mr.nameId}}" class="inp" type="text" placeholder="성함" value="{{mr.name}}" onChange="{{mr.onName}}">
+                <button type="button" class="icon-btn" aria-label="{{mr.delLabel}}" onClick="{{mr.del}}">−</button>
+              </div>
+            </sc-for>
+            <button type="button" class="btn ghost sm" onClick="{{addMourner}}">＋ 상주 추가</button>
+          </div>
+
+          <div class="sub">
+            <h3 class="sub-title">빈소 및 일정</h3>
+            <div class="stack">
+              <div class="field hall-wrap">
+                <label for="f-hall">장례식장명</label>
+                <input id="f-hall" class="inp" type="text" autocomplete="off" placeholder="장례식장 이름으로 검색하거나 직접 입력" value="{{d.hall.name}}" onChange="{{on.hallName}}" onFocus="{{hallFocus}}" onBlur="{{hallBlur}}" aria-expanded="{{hallOpenStr}}" aria-controls="hall-results" aria-autocomplete="list">
+                <sc-if value="{{hallOpen}}" hint-placeholder-val="{{ false }}">
+                  <div id="hall-results" class="hall-results">
+                    <sc-for list="{{hallResults}}" as="h" hint-placeholder-count="3">
+                      <button type="button" class="hall-item" onMouseDown="{{h.pick}}" onClick="{{h.pick}}"><span class="hall-item-name">{{h.name}}</span><span class="hall-item-addr">{{h.address}}</span></button>
+                    </sc-for>
+                    <sc-if value="{{hallNoResult}}" hint-placeholder-val="{{ false }}"><p class="hall-note">검색 결과가 없어요. 입력한 이름 그대로 사용할 수 있어요.</p></sc-if>
+                    <p class="hall-note">데모용 가상 장례식장 목록이에요. 실제 장소 검색은 연결되어 있지 않아요.</p>
+                  </div>
+                </sc-if>
+              </div>
+              <div class="field">
+                <label for="f-addr">주소</label>
+                <input id="f-addr" class="inp" type="text" placeholder="장례식장을 고르면 자동으로 입력돼요" value="{{d.hall.address}}" onChange="{{on.hallAddress}}">
+              </div>
+              <div class="field">
+                <label for="f-room">호실·상세 위치<span class="opt">선택</span></label>
+                <input id="f-room" class="inp" type="text" placeholder="예: 3호실, 특실, VIP실, 지하 1층" value="{{d.hall.room}}" onChange="{{on.hallRoom}}">
+              </div>
+              <div class="grid2">
+                <div class="field">
+                  <label for="f-enc">입관 일시<span class="opt">선택</span></label>
+                  <input id="f-enc" class="inp" type="datetime-local" value="{{d.encoffin}}" onChange="{{on.encoffin}}">
+                </div>
+                <div class="field">
+                  <label for="f-fun">발인 일시<span class="opt">선택</span></label>
+                  <input id="f-fun" class="inp" type="datetime-local" value="{{d.funeral}}" onChange="{{on.funeral}}">
+                </div>
+              </div>
+              <sc-if value="{{scheduleWarn}}" hint-placeholder-val="{{ false }}"><p class="err">발인 일시가 입관 일시보다 빠르게 입력되어 있어요. 한 번 확인해주세요.</p></sc-if>
+              <div class="field">
+                <label for="f-burial">장지<span class="opt">선택</span></label>
+                <input id="f-burial" class="inp" type="text" placeholder="예: ○○추모공원" value="{{d.burial}}" onChange="{{on.burial}}">
+              </div>
+            </div>
+            <div class="switch-row">
+              <div>
+                <p class="switch-title" id="sw-wreath">근조화환 보내기 버튼 표시</p>
+                <p class="hint" style="margin-top: 2px">{{wreathHint}}</p>
+              </div>
+              <div class="row" style="flex-wrap: nowrap">
+                <span class="switch-state" aria-hidden="true">{{wreathState}}</span>
+                <button type="button" role="switch" aria-checked="{{d.wreathOn}}" aria-labelledby="sw-wreath" class="switch {{wreathCls}}" onClick="{{toggleWreath}}"><span class="knob"></span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="sub">
+            <h3 class="sub-title">안내 말씀<span class="opt">선택</span></h3>
+            <p class="sub-desc">예시를 고르거나 직접 쓰세요. 가족장·조문 사양·화환 사양 같은 안내도 여기에 적어요.</p>
+            <div class="guide-list">
+              <sc-for list="{{guides}}" as="g" hint-placeholder-count="4"><button type="button" class="chip {{g.cls}}" onClick="{{g.pick}}">{{g.label}}</button></sc-for>
+            </div>
+            <label for="f-msg" class="sr-only">안내 말씀</label>
+            <textarea id="f-msg" class="inp" rows="4" placeholder="비워 두면 부고장에 표시하지 않아요." value="{{d.message}}" onChange="{{on.message}}"></textarea>
+            <div class="row between" style="margin-top: 6px">
+              <span class="hint" style="margin: 0">{{messageCount}}자</span>
+              <sc-if value="{{hasMessage}}" hint-placeholder-val="{{ false }}"><button type="button" class="btn ghost sm" onClick="{{clearMessage}}">모두 지우기</button></sc-if>
+            </div>
+          </div>
+
+          <div class="sub">
+            <h3 class="sub-title">계좌 정보<span class="opt">선택</span></h3>
+            <sc-if value="{{noAccounts}}" hint-placeholder-val="{{ true }}"><p class="empty-line">필요한 경우에만 추가하세요. 추가하지 않으면 부고장에 표시되지 않아요.</p></sc-if>
+            <sc-for list="{{accounts}}" as="ac" hint-placeholder-count="0">
+              <div class="arow">
+                <div class="field"><label class="sr-only" for="{{ac.bankId}}">은행명</label><input id="{{ac.bankId}}" class="inp" type="text" placeholder="은행명" value="{{ac.bank}}" onChange="{{ac.onBank}}"></div>
+                <div class="field a-num"><label class="sr-only" for="{{ac.numId}}">계좌번호</label><input id="{{ac.numId}}" class="inp" type="text" inputmode="numeric" placeholder="계좌번호" value="{{ac.number}}" onChange="{{ac.onNumber}}"></div>
+                <div class="field"><label class="sr-only" for="{{ac.holderId}}">예금주</label><input id="{{ac.holderId}}" class="inp" type="text" placeholder="예금주" value="{{ac.holder}}" onChange="{{ac.onHolder}}"></div>
+                <button type="button" class="icon-btn" aria-label="{{ac.delLabel}}" onClick="{{ac.del}}">−</button>
+              </div>
+            </sc-for>
+            <button type="button" class="btn ghost sm" onClick="{{addAccount}}">＋ 계좌 추가</button>
+          </div>
+
+          <div class="sub">
+            <h3 class="sub-title">고인 사진<span class="opt">선택</span></h3>
+            <sc-if value="{{noPhoto}}" hint-placeholder-val="{{ true }}">
+              <div class="drop {{photoDragCls}}" onDragOver="{{photoDragOver}}" onDragLeave="{{photoDragLeave}}" onDrop="{{photoDrop}}">
+                <p style="margin: 0; font-size: 14px">사진 한 장을 끌어다 놓거나 선택하세요.</p>
+                <label class="btn sm file-btn" for="photo-file">사진 선택</label>
+                <p class="hint" style="margin: 0">사진이 없으면 흑백 국화와 글자만으로 구성돼요.</p>
+              </div>
+            </sc-if>
+            <sc-if value="{{hasPhoto}}" hint-placeholder-val="{{ false }}">
+              <div class="photo-edit">
+                <div class="photo-box"><img src="{{d.photo.src}}" alt="첨부한 고인 사진 미리보기" style="transform: {{photoTransform}}"></div>
+                <div class="stack" style="gap: 8px">
+                  <div class="range-row"><label for="ph-zoom">확대</label><input id="ph-zoom" type="range" min="1" max="2.5" step="0.05" value="{{d.photo.zoom}}" onChange="{{on.photoZoom}}"></div>
+                  <div class="range-row"><label for="ph-x">좌우</label><input id="ph-x" type="range" min="-40" max="40" step="1" value="{{d.photo.x}}" onChange="{{on.photoX}}"></div>
+                  <div class="range-row"><label for="ph-y">상하</label><input id="ph-y" type="range" min="-40" max="40" step="1" value="{{d.photo.y}}" onChange="{{on.photoY}}"></div>
+                  <div class="row">
+                    <label class="btn sm file-btn" for="photo-file">사진 변경</label>
+                    <button type="button" class="btn ghost sm" onClick="{{resetPhoto}}">위치 초기화</button>
+                    <button type="button" class="btn ghost sm danger" onClick="{{removePhoto}}">삭제</button>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+            <input id="photo-file" class="sr-only" type="file" accept="image/*" onChange="{{onPhotoFile}}">
+            <sc-if value="{{photoErr}}" hint-placeholder-val="{{ false }}"><p class="err">{{photoErr}}</p></sc-if>
+          </div>
+
+          <div class="sub">
+            <h3 class="sub-title">조문 메시지</h3>
+            <div class="switch-row" style="margin-top: 0">
+              <div>
+                <p class="switch-title" id="sw-cond">조문 메시지 받기</p>
+                <p class="hint" style="margin-top: 2px">켜면 받는 분이 부고장에서 메시지를 남기고 볼 수 있어요.</p>
+              </div>
+              <div class="row" style="flex-wrap: nowrap">
+                <span class="switch-state" aria-hidden="true">{{condState}}</span>
+                <button type="button" role="switch" aria-checked="{{d.condolenceOn}}" aria-labelledby="sw-cond" class="switch {{condCls}}" onClick="{{toggleCond}}"><span class="knob"></span></button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="submit-bar">
+          <button type="button" class="btn primary lg" onClick="{{saveObit}}">{{saveLabel}}</button>
+          <span class="hint" style="margin: 0">입력 내용은 이 브라우저에 자동 저장돼요.</span>
+        </div>
+      </sc-if>
+
+      <!-- ===================== 부고장 관리 ===================== -->
+      <sc-if value="{{isManage}}" hint-placeholder-val="{{ false }}">
+        <button type="button" class="back" onClick="{{goList}}">← 내 부고장 목록</button>
+        <h1 class="page-title serif" style="margin-top: 6px">故 {{mg.name}} 님 부고장</h1>
+        <p class="page-sub">{{mg.created}} 만듦 · 마지막 수정 {{mg.updated}}</p>
+        <div class="status-row">
+          <span class="tag">조문 메시지 {{mg.condCount}}건</span>
+          <span class="tag">{{mg.sendTag}}</span>
+          <span class="tag">{{mg.thanksTag}}</span>
+        </div>
+        <div class="stack" style="gap: 14px">
+          <section class="panel">
+            <div class="panel-head"><h2>직접 공유하기</h2><span class="tag free">무료</span></div>
+            <div class="link-box">
+              <label for="ob-link" class="sr-only">부고장 링크</label>
+              <input id="ob-link" class="inp" type="text" readonly="" value="{{mg.link}}" onFocus="{{selectAll}}">
+              <button type="button" class="btn sm" onClick="{{mg.copyLink}}">복사</button>
+            </div>
+            <div class="action-grid">
+              <button type="button" class="btn primary" onClick="{{mg.view}}">받는 사람 화면 보기</button>
+              <button type="button" class="btn" onClick="{{mg.edit}}">수정하기</button>
+              <button type="button" class="btn" onClick="{{mg.copyLink}}">링크 복사</button>
+              <button type="button" class="btn" onClick="{{mg.kakao}}">카카오톡 공유</button>
+            </div>
+            <p class="notice">데모 링크예요. 서버가 없는 프로토타입이라 다른 기기에서는 열리지 않고, 내용은 이 브라우저에만 저장돼요. ‘받는 사람 화면 보기’로 실제 화면을 확인하세요.</p>
+          </section>
+          <section class="panel">
+            <div class="panel-head"><h2>한 번에 발송하기</h2><span class="tag paid">유료 · 예시 요금</span></div>
+            <p class="muted small" style="margin: 0">전화번호 명단을 올리면 이움레터가 부고 문자를 대신 일괄 발송해요. 링크 복사·카카오톡 직접 공유는 계속 무료예요.</p>
+            <div class="row" style="margin-top: 12px">
+              <button type="button" class="btn primary" onClick="{{mg.send}}">한 번에 발송하기</button>
+              <sc-if value="{{mg.hasList}}" hint-placeholder-val="{{ false }}"><span class="hint" style="margin: 0">저장된 발송 명단 {{mg.listCount}}명</span></sc-if>
+            </div>
+          </section>
+          <section class="panel">
+            <div class="panel-head"><h2>장례 이후</h2></div>
+            <div class="action-grid" style="margin-top: 0">
+              <button type="button" class="btn" onClick="{{mg.thanks}}">{{mg.thanksBtn}}</button>
+              <button type="button" class="btn" onClick="{{mg.gifts}}">답례품 알아보기</button>
+            </div>
+          </section>
+          <sc-if value="{{mg.hasLogs}}" hint-placeholder-val="{{ false }}">
+            <section class="panel">
+              <div class="panel-head"><h2>발송 기록</h2><span class="tag">데모 기록</span></div>
+              <sc-for list="{{mg.logs}}" as="lg" hint-placeholder-count="1"><div class="log-item"><span>{{lg.title}}</span><span class="muted">{{lg.meta}}</span></div></sc-for>
+            </section>
+          </sc-if>
+        </div>
+      </sc-if>
+
+      <!-- ===================== 감사장 제작 ===================== -->
+      <sc-if value="{{isThanks}}" hint-placeholder-val="{{ false }}">
+        <button type="button" class="back" onClick="{{backToManage}}">← 부고장 관리</button>
+        <h1 class="page-title" style="margin-top: 6px">감사장 만들기</h1>
+        <p class="page-sub">고인 성함과 상주 정보는 부고장에서 그대로 가져와요. 이 화면에서는 감사 멘트만 고칠 수 있어요.</p>
+        <section class="step" style="margin-top: 18px">
+          <div class="step-head"><span class="step-num" aria-hidden="true">1</span><h2>디자인</h2></div>
+          <div class="design-grid" style="grid-template-columns: repeat(2, minmax(0, 1fr))" role="radiogroup" aria-label="감사장 디자인">
+            <sc-for list="{{tDesigns}}" as="tds" hint-placeholder-count="2">
+              <button type="button" role="radio" aria-checked="{{tds.checked}}" class="design-card {{tds.cls}}" onClick="{{tds.pick}}">
+                <span class="tmini {{tds.mini}}" aria-hidden="true"><span class="mini-line l1"></span><span class="mini-line l2"></span><span class="mini-line l2"></span><span class="mini-line l3"></span></span>
+                <span class="design-name">{{tds.name}}</span>
+                <span class="design-desc">{{tds.desc}}</span>
+              </button>
+            </sc-for>
+          </div>
+        </section>
+        <section class="step">
+          <div class="step-head"><span class="step-num" aria-hidden="true">2</span><h2>감사 멘트</h2></div>
+          <dl class="info-list" style="margin-bottom: 14px">
+            <dt>고인</dt><dd>故 {{tv.name}} 님</dd>
+            <dt>상주</dt><dd>{{tv.mournerLineOrDash}}</dd>
+          </dl>
+          <p class="hint" style="margin: -6px 0 12px">위 정보는 부고장 데이터에서 자동 반영돼요. 바꾸려면 부고장을 수정하세요.</p>
+          <label for="t-msg" class="lbl">감사 멘트</label>
+          <textarea id="t-msg" class="inp" rows="6" style="margin-top: 6px" value="{{tv.message}}" onChange="{{tv.onMessage}}"></textarea>
+          <div class="row between" style="margin-top: 6px">
+            <span class="hint" style="margin: 0">{{tv.count}}자</span>
+            <button type="button" class="btn ghost sm" onClick="{{tv.resetMsg}}">기본 문구로 되돌리기</button>
+          </div>
+          <sc-if value="{{tv.err}}" hint-placeholder-val="{{ false }}"><p class="err">감사 멘트를 입력해주세요.</p></sc-if>
+        </section>
+        <div class="submit-bar">
+          <button type="button" class="btn primary lg" onClick="{{tv.save}}">{{tv.saveLabel}}</button>
+          <sc-if value="{{tv.dirtySaved}}" hint-placeholder-val="{{ false }}"><span class="hint" style="margin: 0">저장하지 않은 변경 사항이 있어요.</span></sc-if>
+        </div>
+        <sc-if value="{{tv.saved}}" hint-placeholder-val="{{ false }}">
+          <div class="stack" style="gap: 14px; margin-top: 14px">
+            <section class="panel">
+              <div class="panel-head"><h2>감사장 공유</h2><span class="tag free">무료</span></div>
+              <div class="link-box">
+                <label for="th-link" class="sr-only">감사장 링크</label>
+                <input id="th-link" class="inp" type="text" readonly="" value="{{tv.link}}" onFocus="{{selectAll}}">
+                <button type="button" class="btn sm" onClick="{{tv.copyLink}}">복사</button>
+              </div>
+              <div class="action-grid">
+                <button type="button" class="btn primary" onClick="{{tv.view}}">받는 사람 화면 보기</button>
+                <button type="button" class="btn" onClick="{{tv.copyLink}}">링크 복사</button>
+                <button type="button" class="btn" onClick="{{tv.kakao}}">카카오톡 공유</button>
+              </div>
+              <p class="notice">데모 링크예요. 다른 기기에서는 열리지 않아요.</p>
+            </section>
+            <section class="panel">
+              <div class="panel-head"><h2>문자로 한 번에 보내기</h2><span class="tag paid">유료 · 예시 요금</span></div>
+              <p class="muted small" style="margin: 0">{{tv.sendDesc}}</p>
+              <button type="button" class="btn primary" style="margin-top: 12px" onClick="{{tv.send}}">문자로 한 번에 보내기</button>
+            </section>
+          </div>
+        </sc-if>
+      </sc-if>
+    </div>
+
+    <div class="ws-right">
+      <sc-if value="{{isView}}" hint-placeholder-val="{{ false }}">
+        <div class="view-bar">
+          <button type="button" class="back" onClick="{{backToManage}}">← 부고장 관리</button>
+          <span class="tag">받는 사람 화면 · 데모</span>
+        </div>
+      </sc-if>
+      <sc-if value="{{isThanksView}}" hint-placeholder-val="{{ false }}">
+        <div class="view-bar">
+          <button type="button" class="back" onClick="{{backToThanks}}">← 감사장 편집</button>
+          <span class="tag">받는 사람 화면 · 데모</span>
+        </div>
+      </sc-if>
+      <sc-if value="{{showPreviewLabel}}" hint-placeholder-val="{{ true }}">
+        <div class="preview-label"><span>{{previewLabel}}</span><span class="tag">미리보기</span></div>
+      </sc-if>
+      <div class="phone">
+        <sc-if value="{{showObitCard}}" hint-placeholder-val="{{ true }}">
+          <article class="card d-{{card.design}} {{card.photoCls}}" aria-label="부고장">
+            <div class="c-hero">
+              <div class="c-bloom" aria-hidden="true">
+                <img class="c-bloom-dark" src="./assets/23a2066988ccfafa8bbec11a446ba11b.jpg" alt="">
+                <img class="c-bloom-light" src="./assets/33d5fbcce4cd7d652413f01e1dbaab7f.jpg" alt="">
+              </div>
+              <div class="c-frame">
+                <svg class="c-emblem" viewBox="0 0 40 40" aria-hidden="true">
+                  <ellipse cx="20" cy="11" rx="3.2" ry="9" transform="rotate(0 20 20)"></ellipse>
+                  <ellipse cx="20" cy="11" rx="3.2" ry="9" transform="rotate(30 20 20)"></ellipse>
+                  <ellipse cx="20" cy="11" rx="3.2" ry="9" transform="rotate(60 20 20)"></ellipse>
+                  <ellipse cx="20" cy="11" rx="3.2" ry="9" transform="rotate(90 20 20)"></ellipse>
+                  <ellipse cx="20" cy="11" rx="3.2" ry="9" transform="rotate(120 20 20)"></ellipse>
+                  <ellipse cx="20" cy="11" rx="3.2" ry="9" transform="rotate(150 20 20)"></ellipse>
+                  <ellipse cx="20" cy="11" rx="3.2" ry="9" transform="rotate(180 20 20)"></ellipse>
+                  <ellipse cx="20" cy="11" rx="3.2" ry="9" transform="rotate(210 20 20)"></ellipse>
+                  <ellipse cx="20" cy="11" rx="3.2" ry="9" transform="rotate(240 20 20)"></ellipse>
+                  <ellipse cx="20" cy="11" rx="3.2" ry="9" transform="rotate(270 20 20)"></ellipse>
+                  <ellipse cx="20" cy="11" rx="3.2" ry="9" transform="rotate(300 20 20)"></ellipse>
+                  <ellipse cx="20" cy="11" rx="3.2" ry="9" transform="rotate(330 20 20)"></ellipse>
+                  <circle cx="20" cy="20" r="2.6"></circle>
+                </svg>
+                <p class="c-kicker">訃告</p>
+                <sc-if value="{{card.hasPhoto}}" hint-placeholder-val="{{ false }}">
+                  <div class="c-photo"><img src="{{card.photoSrc}}" alt="고인 사진" style="transform: {{card.photoTransform}}"></div>
+                </sc-if>
+                <h2 class="c-name {{card.nameCls}}"><span class="c-go">故</span> <span class="c-nm">{{card.name}}</span> <span class="c-nim">님</span></h2>
+                <sc-if value="{{card.hasAge}}" hint-placeholder-val="{{ false }}"><p class="c-age">향년 {{card.age}}세</p></sc-if>
+                <span class="c-rule" aria-hidden="true"></span>
+                <p class="c-lead">{{card.lead}}<br>삼가 알려드립니다.</p>
+              </div>
+            </div>
+            <div class="c-body">
+              <sc-if value="{{card.hasMourners}}" hint-placeholder-val="{{ false }}">
+                <section class="c-sec">
+                  <h3 class="c-h">상주</h3>
+                  <div><sc-for list="{{card.mourners}}" as="mo" hint-placeholder-count="2"><div class="c-mrow"><span class="c-rel">{{mo.rel}}</span><span class="c-mname">{{mo.names}}</span></div></sc-for></div>
+                </section>
+              </sc-if>
+              <sc-if value="{{card.hasPlace}}" hint-placeholder-val="{{ false }}">
+                <section class="c-sec">
+                  <h3 class="c-h">빈소</h3>
+                  <div>
+                    <sc-if value="{{card.hasHallLine}}" hint-placeholder-val="{{ false }}"><p class="c-hall">{{card.hallLine}}</p></sc-if>
+                    <sc-if value="{{card.hasAddress}}" hint-placeholder-val="{{ false }}">
+                      <p class="c-addr">{{card.address}}</p>
+                      <div class="c-links">
+                        <a class="c-link" href="{{card.mapUrl}}" target="_blank" rel="noopener noreferrer">지도 보기</a>
+                        <a class="c-link" href="{{card.routeUrl}}" target="_blank" rel="noopener noreferrer">길찾기</a>
+                        <button type="button" class="c-link" onClick="{{card.copyAddr}}">주소 복사</button>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{card.showWreath}}" hint-placeholder-val="{{ false }}">
+                      <button type="button" class="c-wreath" onClick="{{card.wreath}}"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2"></circle><circle cx="8" cy="8" r="2.4"></circle></svg>근조화환 보내기</button>
+                    </sc-if>
+                  </div>
+                </section>
+              </sc-if>
+              <sc-if value="{{card.hasSchedule}}" hint-placeholder-val="{{ false }}">
+                <section class="c-sec">
+                  <h3 class="c-h">일정</h3>
+                  <dl class="c-sched"><sc-for list="{{card.schedule}}" as="sc" hint-placeholder-count="2"><div class="c-srow"><dt>{{sc.label}}</dt><dd>{{sc.value}}</dd></div></sc-for></dl>
+                </section>
+              </sc-if>
+              <sc-if value="{{card.hasMessage}}" hint-placeholder-val="{{ false }}">
+                <section class="c-sec">
+                  <h3 class="c-h">안내 말씀</h3>
+                  <p class="c-msg">{{card.message}}</p>
+                </section>
+              </sc-if>
+              <sc-if value="{{card.hasAccounts}}" hint-placeholder-val="{{ false }}">
+                <section class="c-sec">
+                  <h3 class="c-h">마음 전하실 곳</h3>
+                  <div><sc-for list="{{card.accounts}}" as="ca" hint-placeholder-count="1">
+                    <div class="c-acc"><div><p class="c-acc-meta">{{ca.meta}}</p><p class="c-acc-num">{{ca.number}}</p></div><button type="button" class="c-link" onClick="{{ca.copy}}" aria-label="{{ca.copyLabel}}">복사</button></div>
+                  </sc-for></div>
+                </section>
+              </sc-if>
+              <sc-if value="{{card.condolenceOn}}" hint-placeholder-val="{{ false }}">
+                <section class="c-sec">
+                  <h3 class="c-h">조문 메시지</h3>
+                  <div>
+                    <div class="c-form">
+                      <label class="sr-only" for="cond-name">작성자 이름</label>
+                      <input id="cond-name" class="inp" type="text" maxlength="20" placeholder="이름" value="{{condName}}" onChange="{{onCondName}}">
+                      <label class="sr-only" for="cond-msg">조문 메시지</label>
+                      <textarea id="cond-msg" class="inp" rows="3" maxlength="300" placeholder="위로의 마음을 남겨주세요." value="{{condMsg}}" onChange="{{onCondMsg}}"></textarea>
+                      <sc-if value="{{condErr}}" hint-placeholder-val="{{ false }}"><p class="err" style="margin: 0">{{condErr}}</p></sc-if>
+                      <button type="button" class="c-submit" onClick="{{card.submitCond}}">등록</button>
+                    </div>
+                    <sc-if value="{{card.hasCond}}" hint-placeholder-val="{{ false }}">
+                      <ul class="c-cond"><sc-for list="{{card.conds}}" as="cd" hint-placeholder-count="1"><li class="c-cond-item"><div class="c-cond-head"><span class="c-cond-name">{{cd.name}}</span><span>{{cd.at}}</span></div><p class="c-cond-msg">{{cd.msg}}</p></li></sc-for></ul>
+                    </sc-if>
+                    <sc-if value="{{card.noCond}}" hint-placeholder-val="{{ true }}"><p class="c-empty">{{card.condEmpty}}</p></sc-if>
+                  </div>
+                </section>
+              </sc-if>
+              <p class="c-foot">이움레터 · IUM LETTER</p>
+            </div>
+          </article>
+        </sc-if>
+        <sc-if value="{{showThanksCard}}" hint-placeholder-val="{{ false }}">
+          <article class="tcard t-{{tc.design}}" aria-label="감사장">
+            <div class="t-inner">
+              <p class="t-kicker">感謝</p>
+              <h2 class="t-title">감사의 말씀</h2>
+              <p class="t-deceased">故 {{tc.name}} 님</p>
+              <div class="t-rule"></div>
+              <p class="t-msg">{{tc.message}}</p>
+              <div class="t-sign">
+                <p class="t-date">{{tc.date}}</p>
+                <sc-if value="{{tc.hasMourners}}" hint-placeholder-val="{{ true }}"><p class="t-from">상주 {{tc.mournerLine}} 올림</p></sc-if>
+              </div>
+            </div>
+          </article>
+        </sc-if>
+      </div>
+    </div>
+  </main>
+  </sc-if>
+
+  <!-- ===================== 내 부고장 목록 ===================== -->
+  <sc-if value="{{isList}}" hint-placeholder-val="{{ false }}">
+    <main class="page">
+      <h1 class="page-title">내 부고장</h1>
+      <p class="page-sub">이 브라우저에 저장된 부고장이에요.</p>
+      <div class="stack" style="margin-top: 18px">
+        <sc-for list="{{obitList}}" as="it" hint-placeholder-count="1">
+          <section class="panel list-card">
+            <div>
+              <h2>故 {{it.name}} 님</h2>
+              <p class="muted small" style="margin: 4px 0 0">{{it.meta}}</p>
+            </div>
+            <div class="row">
+              <button type="button" class="btn sm" onClick="{{it.view}}">받는 사람 화면</button>
+              <button type="button" class="btn primary sm" onClick="{{it.manage}}">관리하기</button>
+            </div>
+          </section>
+        </sc-for>
+        <sc-if value="{{listEmpty}}" hint-placeholder-val="{{ false }}">
+          <section class="panel" style="text-align: center; padding: 40px 20px">
+            <p style="margin: 0 0 14px">아직 만든 부고장이 없어요.</p>
+            <button type="button" class="btn primary" onClick="{{goCreate}}">부고장 만들기</button>
+          </section>
+        </sc-if>
+      </div>
+    </main>
+  </sc-if>
+
+  <!-- ===================== 일괄 발송 ===================== -->
+  <sc-if value="{{isSend}}" hint-placeholder-val="{{ false }}">
+    <main class="page">
+      <button type="button" class="back" onClick="{{sv.back}}">← {{sv.backLabel}}</button>
+      <div class="row" style="margin-top: 6px">
+        <h1 class="page-title">{{sv.title}}</h1>
+        <span class="tag paid">유료 · 예시 요금</span>
+      </div>
+      <p class="page-sub">故 {{sv.name}} 님 · 실제 결제와 문자 발송은 일어나지 않는 데모예요.</p>
+      <ol class="stepper">
+        <sc-for list="{{sv.steps}}" as="sp" hint-placeholder-count="5"><li class="{{sp.cls}}">{{sp.label}}</li></sc-for>
+      </ol>
+
+      <sc-if value="{{sv.s1}}" hint-placeholder-val="{{ true }}">
+        <section class="panel">
+          <sc-if value="{{sv.canLoad}}" hint-placeholder-val="{{ false }}">
+            <div class="notice demo" style="margin: 0 0 16px; display: flex; gap: 10px; align-items: center; justify-content: space-between; flex-wrap: wrap">
+              <span>부고 문자 발송 명단 {{sv.loadCount}}명이 저장되어 있어요. 불러온 뒤 받을 분을 직접 선택하세요.</span>
+              <button type="button" class="btn sm primary" onClick="{{sv.loadList}}">부고 발송 명단 불러오기</button>
+            </div>
+          </sc-if>
+          <div class="tabs" role="tablist" aria-label="명단 추가 방법">
+            <sc-for list="{{sv.tabs}}" as="tb" hint-placeholder-count="4"><button type="button" role="tab" aria-selected="{{tb.on}}" class="tab {{tb.cls}}" onClick="{{tb.pick}}">{{tb.label}}</button></sc-for>
+          </div>
+          <sc-if value="{{sv.tabFile}}" hint-placeholder-val="{{ true }}">
+            <div class="drop">
+              <p style="margin: 0">CSV 파일을 올려주세요. 첫 칸에 이름, 둘째 칸에 전화번호를 두면 돼요.</p>
+              <label class="btn sm file-btn" for="list-file">파일 선택</label>
+              <input id="list-file" class="sr-only" type="file" accept=".csv,.txt,.tsv,.xlsx,.xls,text/csv" onChange="{{sv.onFile}}">
+              <p class="hint" style="margin: 0">엑셀(.xlsx)은 데모에서 직접 읽지 못해요. 엑셀에서 ‘CSV로 저장’한 뒤 올려주세요.</p>
+            </div>
+          </sc-if>
+          <sc-if value="{{sv.tabPaste}}" hint-placeholder-val="{{ false }}">
+            <label for="list-paste" class="lbl">이름과 전화번호를 한 줄에 한 명씩 붙여넣으세요.</label>
+            <textarea id="list-paste" class="inp" rows="7" style="margin-top: 6px" placeholder="박서연 010-0000-1201
+이도윤, 010-0000-1202" value="{{sv.paste}}" onChange="{{sv.onPaste}}"></textarea>
+            <button type="button" class="btn primary sm" style="margin-top: 8px" onClick="{{sv.applyPaste}}">명단에 추가</button>
+          </sc-if>
+          <sc-if value="{{sv.tabPhoto}}" hint-placeholder-val="{{ false }}">
+            <div class="drop">
+              <p style="margin: 0">명단을 찍은 사진이나 캡처를 올려주세요.</p>
+              <label class="btn sm file-btn" for="list-photo">사진 선택</label>
+              <input id="list-photo" class="sr-only" type="file" accept="image/*" onChange="{{sv.onPhoto}}">
+              <p class="hint" style="margin: 0">데모 분석: 실제 글자 인식(OCR)은 연결되어 있지 않아 예시 명단이 들어가요.</p>
+            </div>
+            <sc-if value="{{sv.ocrBusy}}" hint-placeholder-val="{{ false }}"><p class="hint">사진을 분석하는 중…</p></sc-if>
+          </sc-if>
+          <sc-if value="{{sv.tabManual}}" hint-placeholder-val="{{ false }}">
+            <p class="muted small" style="margin: 0 0 10px">빈 행을 추가한 뒤 다음 단계 표에서 이름과 번호를 입력하세요.</p>
+            <button type="button" class="btn sm" onClick="{{sv.addRowGo}}">＋ 행 추가하고 입력하기</button>
+          </sc-if>
+          <sc-if value="{{sv.fileMsg}}" hint-placeholder-val="{{ false }}"><p class="{{sv.fileMsgCls}}">{{sv.fileMsg}}</p></sc-if>
+          <div class="row between" style="margin-top: 18px; border-top: 1px solid #EEE6DB; padding-top: 14px">
+            <button type="button" class="btn ghost sm" onClick="{{sv.addSample}}">예시 명단으로 체험</button>
+            <div class="row">
+              <span class="hint" style="margin: 0">현재 {{sv.rowCount}}명</span>
+              <button type="button" class="btn primary" onClick="{{sv.toStep2}}" disabled="{{sv.noRows}}">다음: 명단 정리</button>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{sv.s2}}" hint-placeholder-val="{{ false }}">
+        <section class="panel">
+          <sc-if value="{{sv.loadedHint}}" hint-placeholder-val="{{ false }}"><p class="notice demo" style="margin: 0 0 12px">불러온 명단은 자동으로 선택되지 않아요. 받을 분을 선택하거나 ‘정상 번호 모두 선택’을 누르세요.</p></sc-if>
+          <div class="summary">
+            <span>전체 <strong>{{sv.total}}</strong>명</span>
+            <span>발송 대상 <strong>{{sv.selCount}}</strong>명</span>
+            <span>확인 필요 <strong>{{sv.checkCount}}</strong></span>
+            <span>중복 <strong>{{sv.dupCount}}</strong></span>
+            <span>형식 오류·번호 없음 <strong>{{sv.badCount}}</strong></span>
+          </div>
+          <div class="row" style="margin-bottom: 12px">
+            <button type="button" class="btn sm" onClick="{{sv.selectAll}}">정상 번호 모두 선택</button>
+            <button type="button" class="btn sm" onClick="{{sv.selectNone}}">선택 해제</button>
+            <button type="button" class="btn sm" onClick="{{sv.removeDup}}" disabled="{{sv.noDup}}">중복 번호 제거</button>
+            <button type="button" class="btn sm" onClick="{{sv.addRow}}">＋ 행 추가</button>
+            <button type="button" class="btn ghost sm" onClick="{{sv.toStep1}}">명단 더 추가</button>
+          </div>
+          <div class="rtable" role="group" aria-label="수신자 명단">
+            <div class="rrow head"><span>선택</span><span>이름</span><span>전화번호</span><span>상태</span><span></span></div>
+            <sc-for list="{{sv.rows}}" as="rw" hint-placeholder-count="3">
+              <div class="rrow">
+                <input type="checkbox" checked="{{rw.checked}}" disabled="{{rw.locked}}" onChange="{{rw.toggle}}" aria-label="{{rw.selLabel}}">
+                <input class="inp" type="text" value="{{rw.name}}" onChange="{{rw.onName}}" aria-label="이름" placeholder="이름">
+                <input class="inp {{rw.phoneCls}}" type="tel" value="{{rw.phone}}" onChange="{{rw.onPhone}}" aria-label="전화번호" placeholder="010-0000-0000">
+                <span class="badge r-status {{rw.badgeCls}}">{{rw.statusLabel}}</span>
+                <div class="r-actions">
+                  <sc-if value="{{rw.isCheck}}" hint-placeholder-val="{{ false }}"><button type="button" class="btn sm" onClick="{{rw.confirm}}">확인</button></sc-if>
+                  <button type="button" class="icon-btn" style="width: 40px; height: 40px; flex-basis: 40px" aria-label="{{rw.delLabel}}" onClick="{{rw.del}}">−</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+          <p class="hint">전화번호가 없는 분은 발송 대상에서 제외돼요. 임의 번호는 만들지 않아요. ‘확인 필요’는 사진 분석 결과라 번호를 확인한 뒤 ‘확인’을 눌러주세요.</p>
+          <div class="row between" style="margin-top: 16px">
+            <button type="button" class="btn ghost" onClick="{{sv.toStep1}}">이전</button>
+            <button type="button" class="btn primary" onClick="{{sv.toStep3}}" disabled="{{sv.noSel}}">다음: 문구 확인 ({{sv.selCount}}명)</button>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{sv.s3}}" hint-placeholder-val="{{ false }}">
+        <div class="two-col">
+          <section class="panel">
+            <div class="panel-head"><h2>보낼 문구</h2><button type="button" class="btn ghost sm" onClick="{{sv.resetText}}">기본 문구로 되돌리기</button></div>
+            <label for="sms-text" class="sr-only">문자 내용</label>
+            <textarea id="sms-text" class="inp" rows="9" value="{{sv.text}}" onChange="{{sv.onText}}"></textarea>
+            <p class="hint">{{sv.bytes}} byte · {{sv.typeLabel}} <sc-if value="{{sv.tooLong}}" hint-placeholder-val="{{ false }}"><span class="err">2,000byte를 넘으면 보낼 수 없어요.</span></sc-if></p>
+            <h3 class="sub-title" style="margin-top: 18px">발송 방식</h3>
+            <label class="radio-card on"><input type="radio" name="channel" checked="{{ true }}" onChange="{{noop}}"><span><strong>문자 (SMS/LMS)</strong><br><span class="muted small">길이에 따라 단문·장문으로 자동 구분돼요.</span></span></label>
+            <label class="radio-card off"><input type="radio" name="channel" disabled="{{ true }}"><span><strong>카카오톡 대량 발송</strong> <span class="tag soon">준비 중</span><br><span class="muted small">알림톡 등 사업자 연동을 검토하고 있어요.</span></span></label>
+          </section>
+          <aside class="panel sticky-sum">
+            <h2>예상 금액</h2>
+            <dl class="cost" style="margin-top: 12px">
+              <dt>수신자</dt><dd>{{sv.selCount}}명</dd>
+              <dt>유형</dt><dd>{{sv.typeShort}}</dd>
+              <dt>건당 (예시 요금)</dt><dd>{{sv.unitLabel}}</dd>
+              <dt class="total">합계</dt><dd class="total">{{sv.totalLabel}}</dd>
+            </dl>
+            <p class="notice">예시 요금이에요. 실제 요금은 확정되지 않았어요.</p>
+            <button type="button" class="btn primary block" style="margin-top: 14px" onClick="{{sv.toStep4}}" disabled="{{sv.tooLongOrEmpty}}">다음: 결제 확인</button>
+            <button type="button" class="btn ghost block" style="margin-top: 8px" onClick="{{sv.toStep2}}">이전</button>
+          </aside>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{sv.s4}}" hint-placeholder-val="{{ false }}">
+        <div class="two-col">
+          <section class="panel">
+            <h2>결제 수단</h2>
+            <div style="margin-top: 12px">
+              <sc-for list="{{sv.pays}}" as="py" hint-placeholder-count="2"><label class="radio-card {{py.cls}}"><input type="radio" name="pay" checked="{{py.checked}}" onChange="{{py.pick}}"><span>{{py.label}}</span></label></sc-for>
+            </div>
+            <label class="check-line"><input type="checkbox" checked="{{sv.agree}}" onChange="{{sv.onAgree}}"><span>실제 결제와 문자 발송이 일어나지 않는 데모임을 확인했어요.</span></label>
+            <h3 class="sub-title">보낼 문구</h3>
+            <p class="c-msg" style="font-size: 14px; background: #FBF8F3; border-radius: 10px; padding: 12px">{{sv.text}}</p>
+          </section>
+          <aside class="panel sticky-sum">
+            <h2>결제 확인</h2>
+            <dl class="cost" style="margin-top: 12px">
+              <dt>발송 대상</dt><dd>{{sv.selCount}}명</dd>
+              <dt>유형</dt><dd>{{sv.typeShort}}</dd>
+              <dt>건당 (예시 요금)</dt><dd>{{sv.unitLabel}}</dd>
+              <dt class="total">결제 금액</dt><dd class="total">{{sv.totalLabel}}</dd>
+            </dl>
+            <button type="button" class="btn primary block" style="margin-top: 16px" onClick="{{sv.pay}}" disabled="{{sv.noAgree}}">데모 결제하고 발송</button>
+            <button type="button" class="btn ghost block" style="margin-top: 8px" onClick="{{sv.toStep3}}">이전</button>
+          </aside>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{sv.s5}}" hint-placeholder-val="{{ false }}">
+        <section class="panel">
+          <sc-if value="{{sv.sending}}" hint-placeholder-val="{{ false }}">
+            <div class="result-hero">
+              <h2>데모 발송 처리 중…</h2>
+              <p class="muted">실제 문자는 보내지 않아요.</p>
+              <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{sv.progress}}"><span style="width: {{sv.progressPct}}"></span></div>
+            </div>
+          </sc-if>
+          <sc-if value="{{sv.finished}}" hint-placeholder-val="{{ false }}">
+            <div class="result-hero">
+              <span class="tag paid">데모 발송 완료</span>
+              <h2>데모 발송 완료</h2>
+              <p class="muted" style="margin: 0">실제 문자는 발송되지 않았고 결제도 이루어지지 않았어요.</p>
+              <div class="summary" style="justify-content: center"><span>성공(예시) <strong>{{sv.okCount}}</strong>명</span><span>실패(예시) <strong>{{sv.failCount}}</strong>명</span><span>예시 금액 <strong>{{sv.totalLabel}}</strong></span></div>
+            </div>
+            <div class="rtable">
+              <sc-for list="{{sv.results}}" as="rs" hint-placeholder-count="3">
+                <div class="rrow" style="grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto"><span>{{rs.name}}</span><span class="muted">{{rs.phone}}</span><span class="badge {{rs.cls}}">{{rs.label}}</span></div>
+              </sc-for>
+            </div>
+            <p class="hint">{{sv.savedNote}}</p>
+            <div class="row" style="margin-top: 14px">
+              <button type="button" class="btn primary" onClick="{{sv.back}}">{{sv.backLabel}}</button>
+            </div>
+          </sc-if>
+        </section>
+      </sc-if>
+    </main>
+  </sc-if>
+
+  <!-- ===================== 근조화환 ===================== -->
+  <sc-if value="{{isWreath}}" hint-placeholder-val="{{ false }}">
+    <main class="page">
+      <button type="button" class="back" onClick="{{wv.back}}">← 부고장으로 돌아가기</button>
+      <h1 class="page-title" style="margin-top: 6px">근조화환 보내기</h1>
+      <p class="page-sub">故 {{wv.name}} 님 빈소로 보내요. 데모 주문이라 실제 주문·결제·배송은 일어나지 않아요.</p>
+      <sc-if value="{{wv.isSelect}}" hint-placeholder-val="{{ true }}">
+        <div class="prod-grid" style="margin-top: 18px">
+          <sc-for list="{{wv.products}}" as="wp" hint-placeholder-count="3">
+            <button type="button" class="prod {{wp.cls}}" onClick="{{wp.pick}}" aria-pressed="{{wp.on}}">
+              <span class="prod-vis" aria-hidden="true">
+                <sc-if value="{{wp.isStand}}" hint-placeholder-val="{{ true }}">
+                  <svg class="ill" viewBox="0 0 96 110"><path d="M30 106 L44 66 M66 106 L52 66 M48 70 L48 106"></path><circle class="fl" cx="48" cy="40" r="26"></circle><circle class="ac" cx="48" cy="40" r="15"></circle><circle class="fl" cx="48" cy="40" r="7"></circle><path d="M40 60 L34 86 M56 60 L62 86"></path></svg>
+                </sc-if>
+                <sc-if value="{{wp.isObje}}" hint-placeholder-val="{{ false }}">
+                  <svg class="ill" viewBox="0 0 96 110"><rect class="f" x="22" y="70" width="52" height="34" rx="3"></rect><circle class="fl" cx="34" cy="56" r="11"></circle><circle class="fl" cx="62" cy="56" r="11"></circle><circle class="ac" cx="48" cy="44" r="13"></circle><circle class="fl" cx="40" cy="28" r="9"></circle><circle class="fl" cx="57" cy="26" r="9"></circle></svg>
+                </sc-if>
+                <sc-if value="{{wp.isBasket}}" hint-placeholder-val="{{ false }}">
+                  <svg class="ill" viewBox="0 0 96 110"><path class="f" d="M18 62 L78 62 L70 100 L26 100 Z"></path><path d="M24 62 C24 30 72 30 72 62"></path><circle class="fl" cx="34" cy="56" r="10"></circle><circle class="ac" cx="48" cy="52" r="11"></circle><circle class="fl" cx="62" cy="56" r="10"></circle><path d="M24 76 L72 76 M26 88 L70 88"></path></svg>
+                </sc-if>
+              </span>
+              <span class="prod-body">
+                <span class="prod-name">{{wp.name}}</span>
+                <span class="prod-price">{{wp.priceLabel}} <span class="opt">예시 가격</span></span>
+                <span class="prod-desc">{{wp.desc}}</span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+        <div class="row" style="justify-content: flex-end; margin-top: 18px">
+          <button type="button" class="btn primary lg" onClick="{{wv.toForm}}" disabled="{{wv.noProduct}}">다음: 주문 정보 입력</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{wv.isForm}}" hint-placeholder-val="{{ false }}">
+        <div class="two-col" style="margin-top: 18px">
+          <div class="stack" style="gap: 14px">
+            <section class="panel">
+              <h2>배송 정보</h2>
+              <p class="hint" style="margin: 2px 0 12px">부고장 정보에서 자동으로 가져왔어요.</p>
+              <dl class="info-list">
+                <dt>장례식장</dt><dd>{{wv.hallName}}</dd>
+                <dt>주소</dt><dd>{{wv.address}}</dd>
+                <dt>고인</dt><dd>故 {{wv.name}} 님</dd>
+                <dt>상주</dt><dd>{{wv.chief}}</dd>
+              </dl>
+              <div class="field" style="margin-top: 14px">
+                <label for="w-room">호실·상세 위치<span class="opt">선택</span></label>
+                <input id="w-room" class="inp" type="text" value="{{wv.room}}" onChange="{{wv.onRoom}}">
+              </div>
+            </section>
+            <section class="panel">
+              <h2>보내는 분</h2>
+              <div class="grid2" style="margin-top: 12px">
+                <div class="field">
+                  <label for="w-sender">보내는 분 (리본 표기)<span class="req">필수</span></label>
+                  <input id="w-sender" class="inp {{wv.senderErrCls}}" type="text" placeholder="예: ○○주식회사 임직원 일동" value="{{wv.sender}}" onChange="{{wv.onSender}}">
+                  <sc-if value="{{wv.senderErr}}" hint-placeholder-val="{{ false }}"><p class="err">보내는 분을 입력해주세요.</p></sc-if>
+                </div>
+                <div class="field">
+                  <label for="w-phone">연락처<span class="req">필수</span></label>
+                  <input id="w-phone" class="inp {{wv.phoneErrCls}}" type="tel" placeholder="010-0000-0000" value="{{wv.phone}}" onChange="{{wv.onPhone}}">
+                  <sc-if value="{{wv.phoneErr}}" hint-placeholder-val="{{ false }}"><p class="err">휴대폰 번호 형식을 확인해주세요.</p></sc-if>
+                </div>
+              </div>
+              <div class="field" style="margin-top: 14px">
+                <span class="lbl">리본 문구<span class="req">필수</span></span>
+                <div class="ribbon-list"><sc-for list="{{wv.ribbons}}" as="rb" hint-placeholder-count="3"><button type="button" class="chip {{rb.cls}}" onClick="{{rb.pick}}">{{rb.label}}</button></sc-for></div>
+                <label for="w-ribbon" class="sr-only">리본 문구 직접 입력</label>
+                <input id="w-ribbon" class="inp {{wv.ribbonErrCls}}" type="text" maxlength="20" value="{{wv.ribbon}}" onChange="{{wv.onRibbon}}" placeholder="직접 입력">
+                <sc-if value="{{wv.ribbonErr}}" hint-placeholder-val="{{ false }}"><p class="err">리본 문구를 입력해주세요.</p></sc-if>
+              </div>
+            </section>
+          </div>
+          <aside class="panel sticky-sum">
+            <h2>주문 요약</h2>
+            <dl class="cost" style="margin-top: 12px">
+              <dt>상품</dt><dd>{{wv.productName}}</dd>
+              <dt>리본</dt><dd>{{wv.ribbonOrDash}}</dd>
+              <dt>배송비</dt><dd>무료 (예시)</dd>
+              <dt class="total">결제 금액</dt><dd class="total">{{wv.priceLabel}}</dd>
+            </dl>
+            <p class="notice">예시 가격이에요. 실제 주문·결제·배송은 일어나지 않아요.</p>
+            <button type="button" class="btn primary block" style="margin-top: 14px" onClick="{{wv.pay}}">데모 결제하기</button>
+            <button type="button" class="btn ghost block" style="margin-top: 8px" onClick="{{wv.toSelect}}">상품 다시 고르기</button>
+          </aside>
+        </div>
+      </sc-if>
+      <sc-if value="{{wv.isDone}}" hint-placeholder-val="{{ false }}">
+        <section class="panel result-hero" style="margin-top: 18px">
+          <span class="tag paid">데모 주문 완료</span>
+          <h2>근조화환 데모 주문이 완료됐어요</h2>
+          <p class="muted" style="margin: 0 0 16px">실제 주문·결제·배송은 일어나지 않았어요. 주문번호 {{wv.orderNo}}</p>
+          <dl class="info-list" style="max-width: 420px; margin: 0 auto; text-align: left">
+            <dt>상품</dt><dd>{{wv.productName}} · {{wv.priceLabel}}</dd>
+            <dt>배송지</dt><dd>{{wv.hallName}} {{wv.room}}</dd>
+            <dt>리본</dt><dd>{{wv.ribbon}} / {{wv.sender}}</dd>
+          </dl>
+          <button type="button" class="btn primary" style="margin-top: 20px" onClick="{{wv.back}}">부고장으로 돌아가기</button>
+        </section>
+      </sc-if>
+    </main>
+  </sc-if>
+
+  <!-- ===================== 답례품 ===================== -->
+  <sc-if value="{{isGifts}}" hint-placeholder-val="{{ false }}">
+    <main class="page">
+      <button type="button" class="back" onClick="{{gv.back}}">← {{gv.backLabel}}</button>
+      <h1 class="page-title" style="margin-top: 6px">답례품 알아보기</h1>
+      <p class="page-sub">조문해 주신 분들께 드릴 답례품이에요. 예시 상품·가격이며 특정 판매처와 제휴된 상품이 아니에요.</p>
+      <sc-if value="{{gv.isList}}" hint-placeholder-val="{{ true }}">
+        <div class="prod-grid" style="margin-top: 18px">
+          <sc-for list="{{gv.products}}" as="gp" hint-placeholder-count="4">
+            <button type="button" class="prod" onClick="{{gp.open}}">
+              <span class="prod-vis" aria-hidden="true">
+                <sc-if value="{{gp.isRice}}" hint-placeholder-val="{{ true }}"><svg class="ill" viewBox="0 0 96 110"><rect class="f" x="18" y="62" width="60" height="30" rx="6"></rect><rect class="fl" x="24" y="44" width="48" height="20" rx="8"></rect><rect class="ac" x="30" y="30" width="36" height="16" rx="8"></rect></svg></sc-if>
+                <sc-if value="{{gp.isTea}}" hint-placeholder-val="{{ false }}"><svg class="ill" viewBox="0 0 96 110"><path class="f" d="M22 46 L70 46 L66 88 C64 96 28 96 26 88 Z"></path><path d="M70 54 C84 54 84 74 68 74"></path><path d="M36 22 C32 30 40 32 36 40 M50 20 C46 28 54 30 50 38"></path></svg></sc-if>
+                <sc-if value="{{gp.isTowel}}" hint-placeholder-val="{{ false }}"><svg class="ill" viewBox="0 0 96 110"><rect class="f" x="16" y="38" width="64" height="22" rx="4"></rect><rect class="fl" x="16" y="62" width="64" height="22" rx="4"></rect><path d="M16 50 L80 50 M16 74 L80 74"></path></svg></sc-if>
+                <sc-if value="{{gp.isNut}}" hint-placeholder-val="{{ false }}"><svg class="ill" viewBox="0 0 96 110"><rect class="f" x="20" y="40" width="56" height="50" rx="8"></rect><circle class="ac" cx="38" cy="58" r="7"></circle><circle class="fl" cx="56" cy="58" r="7"></circle><circle class="fl" cx="47" cy="74" r="7"></circle><path d="M20 50 L76 50"></path></svg></sc-if>
+              </span>
+              <span class="prod-body">
+                <span class="prod-name">{{gp.name}}</span>
+                <span class="prod-price">{{gp.priceLabel}} <span class="opt">1세트 · 예시 가격</span></span>
+                <span class="prod-desc">{{gp.desc}}</span>
+                <span class="prod-desc">최소 {{gp.min}}세트부터</span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{gv.isDetail}}" hint-placeholder-val="{{ false }}">
+        <div class="two-col" style="margin-top: 18px">
+          <div class="stack" style="gap: 14px">
+            <section class="panel">
+              <h2>{{gv.p.name}}</h2>
+              <p class="muted" style="margin: 6px 0 0">{{gv.p.detail}}</p>
+              <dl class="info-list" style="margin-top: 12px">
+                <dt>구성</dt><dd>{{gv.p.desc}}</dd>
+                <dt>가격</dt><dd>{{gv.p.priceLabel}} / 1세트 (예시)</dd>
+                <dt>최소 수량</dt><dd>{{gv.p.min}}세트</dd>
+              </dl>
+              <div class="field" style="margin-top: 16px">
+                <span class="lbl">수량</span>
+                <div class="qty">
+                  <button type="button" aria-label="수량 줄이기" onClick="{{gv.dec}}">−</button>
+                  <label for="g-qty" class="sr-only">수량</label>
+                  <input id="g-qty" type="text" inputmode="numeric" value="{{gv.qty}}" onChange="{{gv.onQty}}">
+                  <button type="button" aria-label="수량 늘리기" onClick="{{gv.inc}}">＋</button>
+                </div>
+                <sc-if value="{{gv.qtyErr}}" hint-placeholder-val="{{ false }}"><p class="err">최소 {{gv.p.min}}세트 이상 주문할 수 있어요.</p></sc-if>
+              </div>
+            </section>
+            <section class="panel">
+              <h2>받으실 곳</h2>
+              <div class="grid2" style="margin-top: 12px">
+                <div class="field"><label for="g-name">받는 분<span class="req">필수</span></label><input id="g-name" class="inp {{gv.nameErrCls}}" type="text" value="{{gv.name}}" onChange="{{gv.onName}}"></div>
+                <div class="field"><label for="g-phone">연락처<span class="req">필수</span></label><input id="g-phone" class="inp {{gv.phoneErrCls}}" type="tel" placeholder="010-0000-0000" value="{{gv.phone}}" onChange="{{gv.onPhone}}"></div>
+              </div>
+              <div class="field" style="margin-top: 12px"><label for="g-addr">배송 주소<span class="req">필수</span></label><input id="g-addr" class="inp {{gv.addrErrCls}}" type="text" value="{{gv.address}}" onChange="{{gv.onAddress}}"></div>
+              <div class="field" style="margin-top: 12px"><label for="g-memo">요청 사항<span class="opt">선택</span></label><input id="g-memo" class="inp" type="text" placeholder="예: 스티커에 ‘감사합니다’ 문구" value="{{gv.memo}}" onChange="{{gv.onMemo}}"></div>
+              <sc-if value="{{gv.formErr}}" hint-placeholder-val="{{ false }}"><p class="err">필수 항목과 휴대폰 번호 형식을 확인해주세요.</p></sc-if>
+            </section>
+          </div>
+          <aside class="panel sticky-sum">
+            <h2>주문 요약</h2>
+            <dl class="cost" style="margin-top: 12px">
+              <dt>상품</dt><dd>{{gv.p.name}}</dd>
+              <dt>수량</dt><dd>{{gv.qty}}세트</dd>
+              <dt class="total">합계</dt><dd class="total">{{gv.totalLabel}}</dd>
+            </dl>
+            <p class="notice">예시 가격이에요. 실제 주문·결제는 일어나지 않아요.</p>
+            <button type="button" class="btn primary block" style="margin-top: 14px" onClick="{{gv.pay}}">데모 주문하기</button>
+            <button type="button" class="btn ghost block" style="margin-top: 8px" onClick="{{gv.toList}}">다른 상품 보기</button>
+          </aside>
+        </div>
+      </sc-if>
+      <sc-if value="{{gv.isDone}}" hint-placeholder-val="{{ false }}">
+        <section class="panel result-hero" style="margin-top: 18px">
+          <span class="tag paid">데모 주문 완료</span>
+          <h2>답례품 데모 주문이 완료됐어요</h2>
+          <p class="muted" style="margin: 0 0 16px">실제 주문·결제·배송은 일어나지 않았어요. 주문번호 {{gv.orderNo}}</p>
+          <dl class="info-list" style="max-width: 420px; margin: 0 auto; text-align: left">
+            <dt>상품</dt><dd>{{gv.p.name}} × {{gv.qty}}세트</dd>
+            <dt>금액</dt><dd>{{gv.totalLabel}}</dd>
+            <dt>배송지</dt><dd>{{gv.address}}</dd>
+          </dl>
+          <div class="row" style="justify-content: center; margin-top: 20px">
+            <button type="button" class="btn" onClick="{{gv.toList}}">다른 답례품 보기</button>
+            <button type="button" class="btn primary" onClick="{{gv.back}}">{{gv.backLabel}}</button>
+          </div>
+        </section>
+      </sc-if>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{isMissing}}" hint-placeholder-val="{{ false }}">
+    <main class="page" style="text-align: center">
+      <section class="panel" style="padding: 40px 20px">
+        <h1 class="page-title">부고장을 찾을 수 없어요</h1>
+        <p class="page-sub">이 브라우저에 저장된 정보가 없거나 삭제되었어요.</p>
+        <div class="row" style="justify-content: center; margin-top: 16px">
+          <button type="button" class="btn" onClick="{{goList}}">내 부고장</button>
+          <button type="button" class="btn primary" onClick="{{goCreate}}">부고장 만들기</button>
+        </div>
+      </section>
+    </main>
+  </sc-if>
+
+  <footer class="foot">데모 프로토타입 · 모든 인물·장소·연락처·계좌는 가상 정보이며 실제 결제·문자 발송·주문이 일어나지 않아요.</footer>
+
+  <sc-if value="{{tabbed}}" hint-placeholder-val="{{ true }}">
+    <div class="mtabs" role="tablist" aria-label="작성과 미리보기 전환">
+      <button type="button" role="tab" aria-selected="{{tabEditOn}}" class="mtab {{tabEditCls}}" onClick="{{tabEdit}}">작성</button>
+      <button type="button" role="tab" aria-selected="{{tabPrevOn}}" class="mtab {{tabPrevCls}}" onClick="{{tabPreview}}">미리보기</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{toast}}" hint-placeholder-val="{{ false }}"><div class="toast" role="status" aria-live="polite">{{toast}}</div></sc-if>
+
+  <sc-if value="{{hasModal}}" hint-placeholder-val="{{ false }}">
+    <div class="overlay" onClick="{{closeModal}}">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" onClick="{{stop}}">
+        <sc-if value="{{modalKakao}}" hint-placeholder-val="{{ false }}">
+          <h2 id="modal-title">카카오톡 공유 미리보기</h2>
+          <p class="muted small" style="margin: 0">카카오 SDK가 연결되지 않은 데모라 카카오톡으로 실제 전송되지 않아요. 링크를 복사해 대화방에 직접 붙여넣어 주세요.</p>
+          <div class="kakao-card">
+            <div class="kakao-thumb"><svg viewBox="0 0 64 40" aria-hidden="true"><circle cx="23" cy="20" r="14"></circle><circle cx="41" cy="20" r="14"></circle></svg></div>
+            <div class="kakao-body"><p class="kakao-title">{{modal.title}}</p><p class="kakao-desc">{{modal.desc}}</p></div>
+            <div class="kakao-btn">{{modal.button}}</div>
+          </div>
+          <div class="row">
+            <button type="button" class="btn primary" style="flex: 1" onClick="{{modalCopy}}">링크 복사</button>
+            <button type="button" class="btn" onClick="{{closeModal}}">닫기</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{modalCopyFallback}}" hint-placeholder-val="{{ false }}">
+          <h2 id="modal-title">직접 복사해주세요</h2>
+          <p class="muted small" style="margin: 0 0 10px">이 환경에서는 자동 복사를 쓸 수 없어요. 아래 내용을 길게 누르거나 전체 선택해 복사하세요.</p>
+          <label for="copy-fallback" class="sr-only">복사할 내용</label>
+          <textarea id="copy-fallback" class="inp" rows="4" readonly="" value="{{modal.text}}" onFocus="{{selectAll}}"></textarea>
+          <button type="button" class="btn block" style="margin-top: 12px" onClick="{{closeModal}}">닫기</button>
+        </sc-if>
+        <sc-if value="{{modalConfirmNew}}" hint-placeholder-val="{{ false }}">
+          <h2 id="modal-title">새로 작성할까요?</h2>
+          <p class="muted small" style="margin: 0">지금 작성 중인 내용이 비워져요. 이미 만든 부고장은 ‘내 부고장’에 그대로 남아요.</p>
+          <div class="row" style="margin-top: 18px; justify-content: flex-end">
+            <button type="button" class="btn" onClick="{{closeModal}}">취소</button>
+            <button type="button" class="btn primary" onClick="{{confirmNew}}">새로 작성</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":2600}}'>
+/* ============ 데모 데이터 ============ */
+const STORE_KEY = 'iumletter-demo-v1';
+const SITE = 'https://iumletter.example';
+const RELIGIONS = [
+  { id: 'general', label: '일반', verb: '별세' },
+  { id: 'protestant', label: '개신교(기독교)', verb: '소천' },
+  { id: 'catholic', label: '천주교', verb: '선종' },
+  { id: 'buddhist', label: '불교', verb: '별세' }
+];
+const DESIGNS = [
+  { id: 'chrys', name: '국화와 먹빛', desc: '흑백 국화 사진과 차콜 이중 테두리' },
+  { id: 'mj', name: '백색 추모', desc: '흰 지면, 먹색 명조, 가는 회색 선' },
+  { id: 'warm', name: '여백과 추모', desc: '짙은 회색, 비대칭 배치와 세로선' }
+];
+const GUIDES = [
+  { label: '정중한 인사', text: '황망한 마음에 일일이 연락드리지 못함을 너그러이 양해해 주시기 바랍니다.\n부디 오셔서 고인의 마지막 길을 함께해 주시면 감사하겠습니다.' },
+  { label: '감사 인사', text: '생전에 고인을 아끼고 사랑해 주신 모든 분께 깊이 감사드립니다.\n직접 찾아뵙고 말씀드려야 하나 글로 대신하는 점 양해 부탁드립니다.' },
+  { label: '가족장 안내', text: '고인의 뜻에 따라 가족장으로 조용히 모시고자 합니다.\n조문과 조화는 정중히 사양하오니 너그러운 양해 부탁드립니다.' },
+  { label: '짧고 정중하게', text: '삼가 고인의 명복을 빌어 주시기 바랍니다.\n마음으로 함께해 주셔서 감사합니다.' }
+];
+const DEMO_HALLS = [
+  { id: 'h1', name: '이움병원 장례식장', address: '서울특별시 예시구 이움로 123 (가상 주소)' },
+  { id: 'h2', name: '하늘정원 장례문화원', address: '경기도 예시시 평안로 45 (가상 주소)' },
+  { id: 'h3', name: '가온 추모의집', address: '부산광역시 예시구 가온대로 7 (가상 주소)' },
+  { id: 'h4', name: '예시대학교병원 장례식장', address: '대전광역시 예시구 학교로 200 (가상 주소)' },
+  { id: 'h5', name: '솔빛 장례식장', address: '광주광역시 예시구 솔빛길 18 (가상 주소)' }
+];
+const THANKS_DESIGNS = [
+  { id: 'classic', name: '정갈한 명조', desc: '흰 바탕, 이중 테두리', mini: 'tmini-classic',
+    message: '바쁘신 가운데에도 먼 길 찾아 주시고 깊은 위로를 보내 주셔서 진심으로 감사드립니다.\n보내 주신 정성 덕분에 고인을 편안히 모실 수 있었습니다.\n직접 찾아뵙고 인사드려야 마땅하나 글로 대신하는 점 너그러이 양해해 주시기 바랍니다.' },
+  { id: 'warm', name: '따뜻한 아이보리', desc: '아이보리 바탕, 부드러운 카드', mini: 'tmini-warm',
+    message: '함께 슬퍼해 주시고 마음을 나누어 주셔서 고맙습니다.\n보내 주신 따뜻한 위로를 오래도록 기억하겠습니다.\n댁내 평안과 건강을 기원합니다.' }
+];
+const WREATHS = [
+  { id: 'w1', kind: 'stand', name: '근조 3단 화환', price: 99000, desc: '빈소 입구에 세우는 가장 일반적인 형태의 근조화환이에요.' },
+  { id: 'w2', kind: 'obje', name: '근조 오브제 화환', price: 129000, desc: '정돈된 형태라 좁은 공간에도 놓기 좋아요.' },
+  { id: 'w3', kind: 'basket', name: '근조 꽃바구니', price: 69000, desc: '제단 가까이에 놓는 소담한 바구니예요.' }
+];
+const RIBBONS = ['삼가 고인의 명복을 빕니다', '깊은 애도를 표합니다', '謹弔'];
+const GIFTS = [
+  { id: 'g1', kind: 'rice', name: '답례 떡 세트', price: 4500, min: 30, desc: '개별 포장 떡 3종', detail: '하나씩 포장되어 나누어 드리기 좋은 떡 구성이에요.' },
+  { id: 'g2', kind: 'tea', name: '녹차 티백 세트', price: 6000, min: 20, desc: '티백 10개입 · 상자 포장', detail: '오래 두고 드실 수 있는 차 선물이에요.' },
+  { id: 'g3', kind: 'towel', name: '답례 수건 2매 세트', price: 5500, min: 30, desc: '면 수건 2매 · 띠지 포장', detail: '실용적인 답례품으로 많이 찾는 구성이에요.' },
+  { id: 'g4', kind: 'nut', name: '견과 소포장 세트', price: 7000, min: 20, desc: '하루견과 7봉 · 상자 포장', detail: '소포장 견과를 상자에 담은 구성이에요.' }
+];
+const PRICE = { sms: 20, lms: 45 };
+const SAMPLE_TEXT = [
+  '[부고] 故 김영수 님께서 2026년 11월 4일 별세하셨기에 삼가 알려드립니다.',
+  '향년 84세',
+  '상주: 아들 김민준, 딸 김서진, 며느리 이서윤',
+  '빈소: 이움병원 장례식장 3호실(특실)',
+  '주소: 서울특별시 예시구 이움로 123 (가상 주소)',
+  '입관: 2026년 11월 5일 오후 2시',
+  '발인: 2026년 11월 6일 오전 7시',
+  '장지: 예시 추모공원',
+  '마음 전하실 곳: 예시은행 000-0000-0000 (예금주 김민준)',
+  '※ 체험용 가상 정보입니다.'
+].join('\n');
+const SAMPLE_LIST = [
+  { name: '박서연', phone: '010-0000-1201' },
+  { name: '이도윤', phone: '010-0000-1202' },
+  { name: '최하은', phone: '010-0000-1203' },
+  { name: '정우진', phone: '010-0000-1201' },
+  { name: '한지민', phone: '010-000-12' },
+  { name: '윤가람', phone: '' },
+  { name: '강민서', phone: '010-0000-1207' },
+  { name: '송예린', phone: '010-0000-1208' }
+];
+const OCR_DEMO_LIST = [
+  { name: '임채원', phone: '010-0000-1301', needsCheck: false },
+  { name: '서준호', phone: '010-0000-13O2', needsCheck: true },
+  { name: '문하린', phone: '010-0000-1303', needsCheck: true },
+  { name: '배지후', phone: '010-0000-1304', needsCheck: false }
+];
+
+/* ============ 유틸 ============ */
+function uid(p) { return p + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+function pad(n) { return String(n).padStart(2, '0'); }
+const WD = ['일', '월', '화', '수', '목', '금', '토'];
+function parseYMD(s) { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s || ''); return m ? { y: +m[1], m: +m[2], d: +m[3] } : null; }
+function validYMD(s) { const p = parseYMD(s); if (!p) return false; const dt = new Date(Date.UTC(p.y, p.m - 1, p.d)); return dt.getUTCFullYear() === p.y && dt.getUTCMonth() === p.m - 1 && dt.getUTCDate() === p.d; }
+function ymd(y, m, d) { const s = y + '-' + pad(m) + '-' + pad(d); return validYMD(s) ? s : null; }
+function weekday(p) { return WD[new Date(Date.UTC(p.y, p.m - 1, p.d)).getUTCDay()]; }
+function fmtDateLong(s) { const p = parseYMD(s); return p ? p.y + '년 ' + p.m + '월 ' + p.d + '일' : ''; }
+function fmtDT(s) {
+  const p = parseYMD(s); if (!p) return '';
+  let out = p.m + '월 ' + p.d + '일(' + weekday(p) + ')';
+  const t = /T(\d{2}):(\d{2})/.exec(s || '');
+  if (t) { const h = +t[1], mi = +t[2]; const ap = h < 12 ? '오전' : '오후'; const h12 = h % 12 === 0 ? 12 : h % 12; out += ' ' + ap + ' ' + h12 + '시' + (mi ? ' ' + mi + '분' : ''); }
+  return out;
+}
+function fmtStamp(iso) {
+  try { return new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(iso)); } catch (e) { return ''; }
+}
+function kstMonth() {
+  try { return new Intl.DateTimeFormat('ko-KR', { timeZone: 'Asia/Seoul', year: 'numeric', month: 'long' }).format(new Date()); } catch (e) { return ''; }
+}
+function digits(s) { let d = String(s || '').replace(/\D/g, ''); if (d.indexOf('82') === 0 && d.length >= 11) d = '0' + d.slice(2); return d; }
+function validPhone(s) { return /^01[016789]\d{7,8}$/.test(digits(s)); }
+function fmtPhone(s) { const d = digits(s); if (d.length === 11) return d.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'); if (d.length === 10) return d.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3'); return String(s || '').trim(); }
+function smsBytes(t) { let b = 0; for (const ch of String(t || '')) b += ch.charCodeAt(0) > 127 ? 2 : 1; return b; }
+function won(n) { return (n || 0).toLocaleString('ko-KR') + '원'; }
+function blankMourner() { return { id: uid('m'), rel: '', name: '' }; }
+function emptyObit() {
+  return { design: 'chrys', name: '', age: '', deathDate: '', religion: 'general', mourners: [blankMourner()], hall: { name: '', address: '', room: '' }, encoffin: '', funeral: '', burial: '', wreathOn: true, message: '', accounts: [], photo: null, condolenceOn: true };
+}
+function relById(id) { return RELIGIONS.find(r => r.id === id) || RELIGIONS[0]; }
+function groupMourners(list) {
+  const out = []; (list || []).forEach(m => { const n = (m.name || '').trim(); if (!n) return; const r = (m.rel || '').trim(); const g = out.find(x => x.rel === r); if (g) g.list.push(n); else out.push({ rel: r, list: [n] }); });
+  return out.map(g => ({ rel: g.rel, names: g.list.join(' · ') }));
+}
+function loadStore() {
+  const base = { obits: {}, order: [], condolences: {}, lists: {}, logs: [], thanks: {}, orders: [], draft: emptyObit(), editingId: null, route: { name: 'create' } };
+  try { const raw = window.localStorage.getItem(STORE_KEY); if (raw) { const s = JSON.parse(raw); return Object.assign({}, base, s, { draft: Object.assign(emptyObit(), s.draft || {}) }); } } catch (e) {}
+  return base;
+}
+function saveStore(s) { try { window.localStorage.setItem(STORE_KEY, JSON.stringify(s)); return true; } catch (e) { return false; } }
+
+/* ============ 부고 문장 해석 (데모 규칙 기반) ============ */
+const REL_SRC = '(배우자|아내|남편|부인|장남|차남|삼남|아들|장녀|차녀|삼녀|딸|며느리|자부|사위|외손자|외손녀|손자|손녀|남동생|여동생|동생|형|오빠|누나|언니|조카)';
+function cleanName(n) { n = (n || '').trim(); if (n.length === 4 && /[을를이가은는도와과님]$/.test(n)) n = n.slice(0, 3); else if (n.length === 3 && /[을를님]$/.test(n)) n = n.slice(0, 2); return n; }
+function findMourners(text) {
+  const re = new RegExp(REL_SRC + '\\s*[:：]?\\s*([가-힣]{2,4})', 'g'); const out = []; let m;
+  while ((m = re.exec(text))) { const name = cleanName(m[2]); if (name.length >= 2 && !out.some(o => o.name === name)) out.push({ rel: m[1], name }); }
+  return out;
+}
+function parseDateTimeKo(str, year) {
+  let date = null, time = null;
+  const full = /(\d{4})\s*[.\-/년]\s*(\d{1,2})\s*[.\-/월]\s*(\d{1,2})/.exec(str);
+  const md = /(\d{1,2})\s*월\s*(\d{1,2})\s*일/.exec(str);
+  if (full) date = ymd(+full[1], +full[2], +full[3]); else if (md) date = ymd(year || 2026, +md[1], +md[2]);
+  const colon = /(오전|오후)?\s*(\d{1,2}):(\d{2})/.exec(str);
+  const ko = /(오전|오후|아침|낮|저녁|밤)?\s*(\d{1,2})\s*시(?:\s*(\d{1,2})\s*분|\s*(반))?/.exec(str);
+  let h = null, mi = 0, ap = '';
+  if (colon) { ap = colon[1] || ''; h = +colon[2]; mi = +colon[3]; } else if (ko) { ap = ko[1] || ''; h = +ko[2]; mi = ko[3] ? +ko[3] : (ko[4] ? 30 : 0); }
+  if (h !== null) { if ((ap === '오후' || ap === '저녁' || ap === '밤' || ap === '낮') && h < 12) h += 12; if (ap === '오전' && h === 12) h = 0; if (h < 24 && mi < 60) time = pad(h) + ':' + pad(mi); }
+  return { date, time };
+}
+function parseObituaryText(text) {
+  const f = {}; const lines = String(text || '').split(/\r?\n/).map(s => s.trim()).filter(Boolean); let m;
+  if ((m = /故\s*([가-힣]{2,4})/.exec(text)) || (m = /고인\s*[:：]?\s*([가-힣]{2,4})/.exec(text)) || (m = /(?:^|\s)고\s+([가-힣]{2,4})\s*(?:님|씨)/.exec(text))) f.name = cleanName(m[1].replace(/님$/, ''));
+  if ((m = /향년\s*(\d{1,3})/.exec(text))) f.age = m[1];
+  const dl = lines.find(l => /(별세|소천|선종|영면|타계|운명)/.test(l) && !/(발인|입관)/.test(l));
+  if (dl) { const r = parseDateTimeKo(dl, 2026); if (r.date) f.deathDate = r.date; }
+  const year = f.deathDate ? +f.deathDate.slice(0, 4) : 2026;
+  if (/소천|기독교|개신교|교회|하나님/.test(text)) f.religion = 'protestant';
+  else if (/선종|천주교|성당|세례명|하느님/.test(text)) f.religion = 'catholic';
+  else if (/불교|사찰|극락왕생|왕생|법당|불자/.test(text)) f.religion = 'buddhist';
+  const relStart = new RegExp('^[-·•*]?\\s*' + REL_SRC);
+  const mLines = lines.filter(l => (/(상주|상제|유족)/.test(l) || relStart.test(l)) && !/(빈소|발인|입관|장지|주소|은행|계좌|예금주)/.test(l));
+  const ms = findMourners(mLines.join('\n')); if (ms.length) f.mourners = ms;
+  const hl = lines.find(l => /(빈소|장례식장|장례문화원|추모의집|장례예식장)/.test(l) && !/^(?:[-·•*]\s*)?주소/.test(l) && !/(발인|입관|장지)/.test(l));
+  if (hl) {
+    let v = hl.replace(/^[\[(]?\s*빈소\s*[\])]?\s*[:：]?\s*/, '');
+    const rooms = [];
+    v = v.replace(/\(([^)]*)\)/g, (a, b) => { if (/(실|층|호|관)/.test(b)) rooms.push(b.trim()); return ' '; });
+    const rm = v.match(/(\d+\s*호실|\d+\s*호|특\s*실|VIP\s*실|귀빈실|[A-Za-z]?\d+\s*층)/g) || [];
+    rm.forEach(x => { v = v.replace(x, ' '); });
+    v = v.replace(/\s+/g, ' ').trim();
+    f.hall = { name: v };
+    const roomAll = rm.map(x => x.trim()).concat(rooms); if (roomAll.length) f.hall.room = roomAll.join(' ');
+  }
+  const al = lines.find(l => /^(?:[-·•*]\s*)?주소/.test(l));
+  if (al) { f.hall = f.hall || {}; f.hall.address = al.replace(/^(?:[-·•*]\s*)?주소\s*[:：]?\s*/, ''); }
+  if (f.hall && f.hall.name && !f.hall.address) { const key = f.hall.name.replace(/\s/g, ''); const h = DEMO_HALLS.find(x => key.indexOf(x.name.replace(/\s/g, '')) >= 0); if (h) { f.hall.name = h.name; f.hall.address = h.address; } }
+  const il = lines.find(l => /입관/.test(l)); if (il) { const r = parseDateTimeKo(il, year); if (r.date && r.time) f.encoffin = r.date + 'T' + r.time; }
+  const fl = lines.find(l => /발인/.test(l)); if (fl) { const r = parseDateTimeKo(fl, year); if (r.date && r.time) f.funeral = r.date + 'T' + r.time; }
+  const bl = lines.find(l => /^(?:[-·•*]\s*)?(장지|안장)/.test(l)); if (bl) { const b = bl.replace(/^(?:[-·•*]\s*)?(장지|안장지?)\s*[:：]?\s*/, '').trim(); if (b) f.burial = b; }
+  if (/(화환|조화|근조기).{0,15}(사양|받지\s*않|사절|정중히)/.test(text)) f.wreathOn = false;
+  const msgLines = lines.filter(l => /(가족장|사양|양해|조용히)/.test(l) && !/(빈소|발인|입관|장지|주소)/.test(l)); if (msgLines.length) f.message = msgLines.join('\n');
+  const accs = [];
+  lines.filter(l => /(은행|뱅크|농협|신협|우체국|새마을금고|계좌)/.test(l)).forEach(l => {
+    const bk = /([가-힣A-Za-z]+(?:은행|뱅크)|농협|신협|우체국|새마을금고)/.exec(l); const num = /(\d[\d\- ]{6,}\d)/.exec(l); if (!num) return;
+    const hd = /예금주\s*[:：]?\s*([가-힣]{2,4})/.exec(l);
+    accs.push({ bank: bk ? bk[1] : '', number: num[1].trim(), holder: hd ? cleanName(hd[1]) : '' });
+  });
+  if (accs.length) f.accounts = accs;
+  return f;
+}
+function mergeParsed(o, f) {
+  const p = {}; const s = [];
+  if (f.name) { p.name = f.name; s.push('고인 성함: ' + f.name); }
+  if (f.age) { p.age = f.age; s.push('향년 ' + f.age + '세'); }
+  if (f.deathDate) { p.deathDate = f.deathDate; s.push('별세일: ' + fmtDateLong(f.deathDate)); }
+  if (f.religion) { p.religion = f.religion; s.push('종교: ' + relById(f.religion).label + ' (원문 표현 확인)'); }
+  if (f.mourners) {
+    const ex = (o.mourners || []).filter(m => (m.name || '').trim() || (m.rel || '').trim());
+    const names = new Set(ex.map(m => (m.name || '').trim()));
+    const add = f.mourners.filter(m => !names.has(m.name)).map(m => ({ id: uid('m'), rel: m.rel, name: m.name }));
+    p.mourners = ex.concat(add); if (!p.mourners.length) p.mourners = [blankMourner()];
+    if (add.length) s.push('상주 ' + add.length + '명: ' + add.map(m => m.rel + ' ' + m.name).join(', '));
+  }
+  if (f.hall) { const h = Object.assign({}, o.hall); ['name', 'address', 'room'].forEach(k => { if (f.hall[k]) h[k] = f.hall[k]; }); p.hall = h; if (f.hall.name) s.push('빈소: ' + h.name + (h.room ? ' ' + h.room : '')); if (f.hall.address) s.push('주소: ' + h.address); }
+  if (f.encoffin) { p.encoffin = f.encoffin; s.push('입관: ' + fmtDT(f.encoffin)); }
+  if (f.funeral) { p.funeral = f.funeral; s.push('발인: ' + fmtDT(f.funeral)); }
+  if (f.burial) { p.burial = f.burial; s.push('장지: ' + f.burial); }
+  if (f.wreathOn === false) { p.wreathOn = false; s.push('화환 사양 문구를 확인해 근조화환 버튼을 껐어요'); }
+  if (f.message && !(o.message || '').trim()) { p.message = f.message; s.push('안내 말씀 반영'); }
+  if (f.accounts) { const ex = o.accounts || []; const nums = new Set(ex.map(a => digits(a.number))); const add = f.accounts.filter(a => !nums.has(digits(a.number))).map(a => Object.assign({ id: uid('a') }, a)); if (add.length) { p.accounts = ex.concat(add); s.push('계좌 ' + add.length + '개'); } }
+  return { patch: p, summary: s };
+}
+function interpretCommand(t, o) {
+  const p = {}, done = [], issues = [];
+  const year = (parseYMD(o.deathDate) || { y: 2026 }).y;
+  const keys = [{ k: '입관', f: 'encoffin' }, { k: '발인', f: 'funeral' }].map(x => Object.assign(x, { i: t.indexOf(x.k) })).filter(x => x.i >= 0).sort((a, b) => a.i - b.i);
+  keys.forEach((x, n) => {
+    const seg = t.slice(x.i, n + 1 < keys.length ? keys[n + 1].i : t.length);
+    const dt = parseDateTimeKo(seg, year); const cur = o[x.f] || '';
+    if (!dt.date && !dt.time) { if (/(바꿔|변경|해줘|으로|로)/.test(seg)) issues.push(x.k + ' 날짜와 시간을 알려주세요. 예: “' + x.k + '은 11월 6일 오전 8시로 바꿔줘”'); return; }
+    const date = dt.date || (cur ? cur.slice(0, 10) : ''); const time = dt.time || (cur.length >= 16 ? cur.slice(11, 16) : '');
+    if (!date) { issues.push(x.k + ' 날짜도 함께 알려주세요.'); return; }
+    if (!time) { issues.push(x.k + ' 시간도 함께 알려주세요.'); return; }
+    p[x.f] = date + 'T' + time; done.push(x.k + ' 일시를 바꿨어요 → ' + fmtDT(p[x.f]));
+  });
+  if (!keys.length && /(별세일|별세|소천|선종)/.test(t)) { const dt = parseDateTimeKo(t, year); if (dt.date) { p.deathDate = dt.date; done.push('별세일을 바꿨어요 → ' + fmtDateLong(dt.date)); } }
+  let rel = null;
+  if (/(개신교|기독교|교회|소천)/.test(t)) rel = 'protestant'; else if (/(천주교|성당|선종)/.test(t)) rel = 'catholic'; else if (/불교/.test(t)) rel = 'buddhist'; else if (/종교.*(일반|없)/.test(t)) rel = 'general';
+  if (rel) { p.religion = rel; done.push('종교를 ‘' + relById(rel).label + '’로 바꿨어요 → 첫 문구가 “' + relById(rel).verb + '하셨기에”로 바뀌어요'); }
+  const ms = (o.mourners || []);
+  if (/(추가|넣어|더해)/.test(t)) {
+    const found = findMourners(t.replace(/상주/g, ' '));
+    if (found.length) { let list = ms.filter(m => (m.name || '').trim() || (m.rel || '').trim()); const added = []; found.forEach(f => { if (!list.some(m => m.name === f.name)) { list = list.concat([{ id: uid('m'), rel: f.rel, name: f.name }]); added.push(f.rel + ' ' + f.name); } }); if (added.length) { p.mourners = list; done.push('상주에 ' + added.join(', ') + ' 님을 추가했어요'); } else issues.push('이미 상주에 있는 분이에요.'); }
+    else if (/상주/.test(t)) issues.push('추가할 관계와 성함을 함께 알려주세요. 예: “상주에 딸 김지연을 추가해줘”');
+  }
+  if (/(삭제|빼|지워|제외)/.test(t) && /상주|님/.test(t)) {
+    const rm = ms.filter(m => (m.name || '').trim() && t.indexOf(m.name.trim()) >= 0);
+    if (rm.length) { let list = ms.filter(m => rm.indexOf(m) < 0); if (!list.length) list = [blankMourner()]; p.mourners = list; done.push('상주에서 ' + rm.map(m => m.name).join(', ') + ' 님을 뺐어요'); }
+  }
+  if (/(안내|인사말|말씀)/.test(t) && /(써|작성|만들|바꿔|정중|짧|길게)/.test(t)) {
+    let g = GUIDES[0]; if (/가족장/.test(t)) g = GUIDES[2]; else if (/짧/.test(t)) g = GUIDES[3]; else if (/감사/.test(t)) g = GUIDES[1];
+    p.message = g.text; done.push('안내 말씀을 작성했어요. 아래 ‘안내 말씀’ 칸에서 자유롭게 고칠 수 있어요');
+  }
+  if (/(화환|조화)/.test(t)) {
+    if (/(받지|사양|안\s*받|거절|사절|끄|꺼|숨겨|빼)/.test(t)) { p.wreathOn = false; done.push('근조화환 보내기 버튼을 껐어요. 필요하면 안내 말씀에 ‘화환은 정중히 사양합니다’를 적어 드릴 수 있어요'); }
+    else if (/(받|켜|표시|보여)/.test(t)) { p.wreathOn = true; done.push('근조화환 보내기 버튼을 켰어요'); }
+  }
+  if (/(조문\s*메시지|방명록)/.test(t)) {
+    if (/(끄|꺼|받지|안\s*받|닫|숨)/.test(t)) { p.condolenceOn = false; done.push('조문 메시지 받기를 껐어요'); }
+    else { p.condolenceOn = true; done.push('조문 메시지 받기를 켰어요'); }
+  }
+  let m;
+  if ((m = /향년\s*(\d{1,3})|(\d{2,3})\s*세/.exec(t))) { p.age = m[1] || m[2]; done.push('향년을 ' + p.age + '세로 바꿨어요'); }
+  if ((m = /(?:고인\s*(?:성함|이름)?|성함)\s*(?:은|는|을|를)?\s*([가-힣]{2,4}?)\s*(?:님으로|으로|로)/.exec(t))) { p.name = m[1]; done.push('고인 성함을 ‘' + m[1] + '’(으)로 바꿨어요'); }
+  if ((m = /장지(?:는|은|를|을)?\s*(.+?)\s*(?:으로|로)\s*(?:해|바꿔|변경|설정|적어|넣어)/.exec(t))) { p.burial = m[1].trim(); done.push('장지를 ‘' + p.burial + '’(으)로 적었어요'); }
+  const hall = Object.assign({}, o.hall); let hallChanged = false;
+  if ((m = /(\d+\s*호실|특실|VIP\s*실|귀빈실)/.exec(t)) && /(호실|빈소|특실|VIP|귀빈)/.test(t)) { hall.room = m[1]; hallChanged = true; done.push('호실을 ‘' + m[1] + '’로 바꿨어요'); }
+  const hk = t.replace(/\s/g, ''); const dh = DEMO_HALLS.find(h => hk.indexOf(h.name.replace(/\s/g, '')) >= 0);
+  if (dh) { hall.name = dh.name; hall.address = dh.address; hallChanged = true; done.push('빈소를 ‘' + dh.name + '’로 바꾸고 주소를 넣었어요'); }
+  if (hallChanged) p.hall = hall;
+  if (/(디자인|스타일)/.test(t)) { let ds = null; if (/국화/.test(t)) ds = 'chrys'; else if (/명조/.test(t)) ds = 'mj'; else if (/(여백|따뜻)/.test(t)) ds = 'warm'; if (ds) { p.design = ds; done.push('디자인을 ‘' + DESIGNS.find(x => x.id === ds).name + '’로 바꿨어요. 입력한 내용은 그대로예요'); } }
+  if (/계좌/.test(t)) {
+    const f = parseObituaryText(t);
+    if (f.accounts && f.accounts.length) { p.accounts = (o.accounts || []).concat(f.accounts.map(a => Object.assign({ id: uid('a') }, a))); done.push('계좌를 추가했어요'); }
+    else if (/(추가|넣어)/.test(t)) issues.push('은행명, 계좌번호, 예금주를 함께 알려주시거나 아래 ‘계좌 정보’에서 직접 추가해주세요.');
+  }
+  return { patch: p, done, issues };
+}
+
+/* ============ 교체 가능한 연동 지점 ============
+   실제 AI·OCR·링크 수집·발송을 연결할 때 이 객체의 함수만 바꾸면 됩니다.
+   지금은 모두 브라우저 안에서 동작하는 데모 규칙입니다. */
+const IumAI = {
+  analyzeText: text => Promise.resolve(parseObituaryText(text)),
+  interpret: (text, obit) => Promise.resolve(interpretCommand(text, obit)),
+  analyzeImageDemo: () => Promise.resolve({ demo: true, fields: parseObituaryText(SAMPLE_TEXT) }),
+  fetchLinkDemo: () => Promise.resolve({ demo: true, fields: parseObituaryText(SAMPLE_TEXT) }),
+  ocrRecipientsDemo: () => new Promise(res => setTimeout(() => res({ demo: true, rows: OCR_DEMO_LIST }), 900)),
+  sendSmsDemo: rows => new Promise(res => setTimeout(() => res(rows.map(r => ({ id: r.id, ok: digits(r.phone).slice(-1) !== '7' }))), 1300))
+};
+
+function parseListText(t) {
+  return String(t || '').replace(/^﻿/, '').split(/\r?\n/).map(l => l.trim()).filter(Boolean).map(line => {
+    const ph = /(\+?82[-\s]?)?0?1[016789][-\s.]?\d{3,4}[-\s.]?\d{4}|\d[\d\-\s.]{5,}\d/.exec(line);
+    const phone = ph ? ph[0].trim() : '';
+    const name = (ph ? line.replace(ph[0], ' ') : line).replace(/["',\t;|:]/g, ' ').replace(/\s+/g, ' ').trim();
+    return { name, phone };
+  }).filter(r => !(/^(이름|성명|name)/i.test(r.name) && !digits(r.phone)));
+}
+function rowsWithStatus(rows) {
+  const seen = new Set();
+  return rows.map(r => { const d = digits(r.phone); let status; if (!d) status = 'missing'; else if (!validPhone(d)) status = 'invalid'; else if (seen.has(d)) status = 'dup'; else { seen.add(d); status = r.needsCheck ? 'check' : 'ok'; } return Object.assign({}, r, { status }); });
+}
+const STATUS_LABEL = { ok: '정상', dup: '중복 번호', invalid: '형식 오류', missing: '번호 없음', check: '확인 필요' };
+
+class Component extends DCLogic {
+  constructor(...args) {
+    super(...args);
+    const store = loadStore();
+    let route = store.route || { name: 'create' };
+    this.state = {
+      store, route,
+      chat: [{ id: 'c0', role: 'ai', text: '부고 문자나 링크, 사진을 넣어주세요. 필요한 내용을 정리해드릴게요.\n처음이라면 ‘예시로 체험하기’를 눌러보세요.', actions: [{ label: '예시로 체험하기', type: 'sample' }] }],
+      chatInput: '', chatBusy: false, chatDrag: false, photoDrag: false, photoErr: '', hallFocus: false,
+      mobileTab: 'edit', toast: '', modal: null, formErr: {},
+      send: null, wreath: null, gift: null, thanksDraft: null, thanksErr: false,
+      condName: '', condMsg: '', condErr: '', storageWarn: false
+    };
+    this.chatEl = null;
+  }
+  componentDidMount() { if (!saveStore(this.state.store)) this.setState({ storageWarn: true }); }
+  componentWillUnmount() { clearTimeout(this._tt); clearInterval(this._pi); }
+  componentDidUpdate(pp, ps) {
+    if (ps.store !== this.state.store || ps.route !== this.state.route) this.persist();
+    if ((ps.chat.length !== this.state.chat.length || ps.chatBusy !== this.state.chatBusy) && this.chatEl) this.chatEl.scrollTop = this.chatEl.scrollHeight;
+    if (ps.route !== this.state.route) { try { window.scrollTo(0, 0); } catch (e) {} }
+  }
+  persist() {
+    const r = this.state.route; const keep = ['create', 'list', 'manage', 'view', 'thanks', 'thanksView'];
+    const safe = keep.indexOf(r.name) >= 0 ? r : (r.id ? { name: 'manage', id: r.id } : { name: 'create' });
+    if (!saveStore(Object.assign({}, this.state.store, { route: safe })) && !this.state.storageWarn) this.setState({ storageWarn: true });
+  }
+  toast(msg) { clearTimeout(this._tt); this.setState({ toast: msg }); this._tt = setTimeout(() => this.setState({ toast: '' }), 2600); }
+  go(name, id, extra) { this.setState(Object.assign({ route: { name, id: id || null }, mobileTab: 'edit', hallFocus: false }, extra || {})); }
+  setStore(fn) { this.setState(s => ({ store: fn(s.store) })); }
+  updDraft(fn) { this.setState(s => ({ store: Object.assign({}, s.store, { draft: fn(s.store.draft) }) })); }
+  patchDraft(p) { this.updDraft(d => Object.assign({}, d, p)); if (p.name) this.setState(s => ({ formErr: Object.assign({}, s.formErr, { name: '' }) })); }
+
+  /* ---------- 복사 ---------- */
+  legacyCopy(text) { try { const ta = document.createElement('textarea'); ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.top = '0'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); const r = document.execCommand('copy'); document.body.removeChild(ta); return r; } catch (e) { return false; } }
+  copyText(text, okMsg) {
+    const ok = () => this.toast(okMsg || '복사했어요.');
+    const fallback = () => { if (this.legacyCopy(text)) ok(); else this.setState({ modal: { type: 'copy', text } }); };
+    try { if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(ok, fallback); return; } } catch (e) {}
+    fallback();
+  }
+
+  /* ---------- 이미지 ---------- */
+  readImage(file, max) {
+    return new Promise((res, rej) => {
+      const fr = new FileReader();
+      fr.onload = () => { const src = fr.result; const img = new Image(); img.onload = () => { try { const sc = Math.min(1, (max || 900) / Math.max(img.width, img.height)); const c = document.createElement('canvas'); c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc); c.getContext('2d').drawImage(img, 0, 0, c.width, c.height); res(c.toDataURL('image/jpeg', 0.86)); } catch (e) { res(src); } }; img.onerror = () => rej(new Error('img')); img.src = src; };
+      fr.onerror = () => rej(fr.error); fr.readAsDataURL(file);
+    });
+  }
+
+  /* ---------- AI 채팅 ---------- */
+  ai(text, extra) { return Object.assign({ id: uid('c'), role: 'ai', text }, extra || {}); }
+  addChat(list, busy) { this.setState(s => ({ chat: s.chat.concat(list), chatBusy: busy === undefined ? s.chatBusy : busy })); }
+  sendChat(textArg) {
+    const fromInput = textArg === undefined || textArg === null;
+    const text = String(fromInput ? this.state.chatInput : textArg).trim();
+    if (!text || this.state.chatBusy) return;
+    this.setState(s => ({ chat: s.chat.concat([{ id: uid('c'), role: 'user', text }]), chatInput: fromInput ? '' : s.chatInput, chatBusy: true }));
+    setTimeout(() => this.processText(text), 650);
+  }
+  processText(text) {
+    const o = this.state.store.draft; let reply;
+    const url = /(https?:\/\/[^\s]+)/.exec(text);
+    const kw = (text.match(/(빈소|발인|상주|입관|장지|별세|소천|선종)/g) || []).length;
+    const looksObit = text.length >= 40 && (kw >= 3 || (kw >= 2 && text.split('\n').length >= 3));
+    if (url && text.replace(url[0], '').trim().length < 40) {
+      reply = this.ai('링크를 받았어요. 이 데모 환경에서는 외부 링크의 내용을 실제로 불러올 수 없어요.\n흐름을 보시려면 예시 결과를 적용해 보세요. 부고 문자 내용을 그대로 붙여넣으면 실제로 정리해 드려요.', { demo: true, actions: [{ label: '예시 결과 적용', type: 'applyDemo' }] });
+    } else if (looksObit) {
+      const r = parseObituaryText(text); const mg = mergeParsed(o, r);
+      if (mg.summary.length) { this.patchDraft(mg.patch); reply = this.ai('부고 내용을 정리해 반영했어요.\n· ' + mg.summary.join('\n· ') + '\n\n미리보기를 확인하고, 필요하면 아래 입력란이나 대화로 고쳐주세요.'); }
+      else reply = this.ai('부고 내용에서 정리할 항목을 찾지 못했어요. 고인 성함, 빈소, 발인 일시가 들어간 문자를 붙여넣어 주세요.');
+    } else {
+      const r = interpretCommand(text, o);
+      if (r.done.length) { this.patchDraft(r.patch); reply = this.ai(r.done.join('\n') + (r.issues.length ? '\n' + r.issues.join('\n') : '')); }
+      else if (r.issues.length) reply = this.ai(r.issues.join('\n'));
+      else if (/(만들어|작성해)/.test(text)) reply = this.ai('부고 문자나 내용을 함께 붙여넣어 주세요. 고인 성함, 상주, 빈소, 발인 일시를 찾아 정리해 드릴게요.\n바로 보시려면 ‘예시로 체험하기’를 눌러보세요.', { actions: [{ label: '예시로 체험하기', type: 'sample' }] });
+      else reply = this.ai('요청을 정확히 이해하지 못했어요. 이렇게 말씀해 보세요.\n· 발인은 11월 6일 오전 8시로 바꿔줘\n· 상주에 딸 김지연을 추가해줘\n· 안내 말씀을 짧고 정중하게 써줘\n· 화환은 받지 않을게\n(데모 AI는 정해진 예시 표현을 중심으로 동작해요.)');
+    }
+    this.addChat([reply], false);
+  }
+  runSample() {
+    if (this.state.chatBusy) return;
+    this.sendChat('이 내용으로 부고장을 만들어줘.\n\n' + SAMPLE_TEXT);
+  }
+  runAction(a) {
+    if (a.type === 'sample') return this.runSample();
+    if (a.type === 'applyDemo') { const mg = mergeParsed(this.state.store.draft, parseObituaryText(SAMPLE_TEXT)); this.patchDraft(mg.patch); this.addChat([this.ai('예시 결과를 적용했어요. 실제 첨부 내용이 아닌 데모 데이터예요.\n· ' + mg.summary.join('\n· '), { demo: true })]); return; }
+    if (a.type === 'setPhoto') { this.patchDraft({ photo: { src: a.src, zoom: 1, x: 0, y: 0 } }); this.addChat([this.ai('이 사진을 고인 사진으로 지정했어요. ‘고인 사진’에서 크기와 위치를 조정하거나 삭제할 수 있어요.')]); }
+  }
+  handleChatFiles(files) {
+    const arr = Array.prototype.slice.call(files || []); if (!arr.length) return;
+    arr.forEach(f => {
+      if (/^image\//.test(f.type)) {
+        this.readImage(f, 1000).then(src => {
+          this.addChat([{ id: uid('c'), role: 'user', text: f.name, images: [{ src }] }, this.ai('사진을 받았어요. 이 데모에서는 사진 속 글자를 실제로 읽지 않아요(OCR 미연결).\n예시 분석 결과로 흐름을 체험하거나, 이 사진을 고인 사진으로 지정할 수 있어요. 채팅에 올린 사진은 자동으로 고인 사진이 되지 않아요.', { demo: true, actions: [{ label: '예시 분석 결과 적용', type: 'applyDemo' }, { label: '고인 사진으로 지정', type: 'setPhoto', src, cls: 'ghost' }] })]);
+        }, () => this.addChat([this.ai('사진을 읽지 못했어요. 다른 파일로 다시 시도해주세요.')]));
+      } else if (/\.txt$/i.test(f.name) || f.type === 'text/plain') {
+        const fr = new FileReader(); fr.onload = () => this.sendChat(String(fr.result || '')); fr.readAsText(f);
+      } else {
+        this.addChat([{ id: uid('c'), role: 'user', text: f.name }, this.ai('이 형식(' + (f.name.split('.').pop() || '알 수 없음') + ')은 데모에서 지원하지 않아요. 사진·스크린샷이나 텍스트 파일, 또는 부고 문자를 붙여넣어 주세요.')]);
+      }
+    });
+  }
+
+  /* ---------- 입력 조작 ---------- */
+  updMourner(id, k, v) { this.updDraft(d => Object.assign({}, d, { mourners: d.mourners.map(m => m.id === id ? Object.assign({}, m, { [k]: v }) : m) })); }
+  delMourner(id) { this.updDraft(d => { let l = d.mourners.filter(m => m.id !== id); if (!l.length) l = [blankMourner()]; return Object.assign({}, d, { mourners: l }); }); }
+  updAccount(id, k, v) { this.updDraft(d => Object.assign({}, d, { accounts: d.accounts.map(a => a.id === id ? Object.assign({}, a, { [k]: v }) : a) })); }
+  setHall(k, v) { this.updDraft(d => Object.assign({}, d, { hall: Object.assign({}, d.hall, { [k]: v }) })); }
+  setPhoto(k, v) { this.updDraft(d => d.photo ? Object.assign({}, d, { photo: Object.assign({}, d.photo, { [k]: +v }) }) : d); }
+  handlePhotoFile(file) {
+    if (!file) return;
+    if (!/^image\//.test(file.type)) { this.setState({ photoErr: '이미지 파일만 올릴 수 있어요.' }); return; }
+    this.readImage(file, 900).then(src => { this.patchDraft({ photo: { src, zoom: 1, x: 0, y: 0 } }); this.setState({ photoErr: '' }); }, () => this.setState({ photoErr: '사진을 읽지 못했어요.' }));
+  }
+  saveObit() {
+    const s = this.state.store; const d = s.draft;
+    if (!(d.name || '').trim()) { this.setState({ formErr: { name: '고인 성함을 입력해주세요.' }, mobileTab: 'edit' }); this.toast('고인 성함을 입력해주세요.'); try { const el = document.getElementById('f-name'); if (el) el.focus(); } catch (e) {} return; }
+    if (d.age && !/^\d{1,3}$/.test(d.age)) { this.toast('향년은 숫자로 입력해주세요.'); return; }
+    const prev = s.editingId && s.obits[s.editingId] ? s.obits[s.editingId] : null;
+    const id = prev ? prev.id : uid('ob'); const now = new Date().toISOString();
+    const ob = Object.assign({}, d, { id, name: d.name.trim(), mourners: d.mourners.filter(m => (m.name || '').trim()), accounts: d.accounts.filter(a => (a.number || '').trim()), createdAt: prev ? prev.createdAt : now, updatedAt: now });
+    const order = prev ? s.order : [id].concat(s.order);
+    this.setState({ store: Object.assign({}, s, { obits: Object.assign({}, s.obits, { [id]: ob }), order, editingId: id }), route: { name: 'manage', id } });
+    this.toast(prev ? '수정 내용을 저장했어요.' : '부고장을 만들었어요.');
+  }
+  editObit(id) {
+    const ob = this.state.store.obits[id]; if (!ob) return;
+    const draft = Object.assign(emptyObit(), JSON.parse(JSON.stringify(ob))); if (!draft.mourners.length) draft.mourners = [blankMourner()];
+    delete draft.id; delete draft.createdAt; delete draft.updatedAt;
+    this.setState(s => ({ store: Object.assign({}, s.store, { draft, editingId: id }), route: { name: 'create' }, mobileTab: 'edit' }));
+  }
+  newObit() { this.setState(s => ({ store: Object.assign({}, s.store, { draft: emptyObit(), editingId: null }), modal: null, formErr: {}, route: { name: 'create' } })); this.toast('새 부고장을 작성해요.'); }
+  addCondolence(id) {
+    const name = this.state.condName.trim(), msg = this.state.condMsg.trim();
+    if (!name || !msg) { this.setState({ condErr: '이름과 메시지를 모두 입력해주세요.' }); return; }
+    const item = { id: uid('cd'), name, msg, at: new Date().toISOString() };
+    this.setStore(st => Object.assign({}, st, { condolences: Object.assign({}, st.condolences, { [id]: [item].concat(st.condolences[id] || []) }) }));
+    this.setState({ condName: '', condMsg: '', condErr: '' }); this.toast('조문 메시지를 남겼어요.');
+  }
+
+  /* ---------- 링크·공유 ---------- */
+  obitLink(id) { return SITE + '/o/' + id; }
+  thanksLink(t) { return SITE + '/t/' + t.id; }
+  openKakao(kind, ob) {
+    const th = this.state.store.thanks[ob.id];
+    if (kind === 'thanks' && th) this.setState({ modal: { type: 'kakao', title: '[감사장] 故 ' + ob.name + ' 님', desc: '보내 주신 위로에 깊이 감사드립니다.', button: '감사장 보기', link: this.thanksLink(th) } });
+    else { const p = parseYMD(ob.deathDate); this.setState({ modal: { type: 'kakao', title: '[부고] 故 ' + ob.name + ' 님', desc: (p ? p.m + '월 ' + p.d + '일 ' : '') + relById(ob.religion).verb + '하셨기에 삼가 알려드립니다.', button: '부고장 보기', link: this.obitLink(ob.id) } }); }
+  }
+
+  /* ---------- 일괄 발송 ---------- */
+  smsDefault(kind, ob) {
+    if (kind === 'thanks') {
+      const th = this.state.store.thanks[ob.id]; const chief = (ob.mourners || []).filter(m => m.name)[0];
+      return '[감사장] 故 ' + ob.name + ' 님의 장례에 보내 주신 위로와 정성에 깊이 감사드립니다.\n감사장 보기: ' + (th ? this.thanksLink(th) : '') + (chief ? '\n상주 ' + chief.name + ' 드림' : '');
+    }
+    const p = parseYMD(ob.deathDate); const lines = ['[부고] 故 ' + ob.name + ' 님께서 ' + (p ? p.m + '월 ' + p.d + '일 ' : '') + relById(ob.religion).verb + '하셨기에 삼가 알려드립니다.'];
+    if (ob.hall && ob.hall.name) lines.push('빈소: ' + ob.hall.name + (ob.hall.room ? ' ' + ob.hall.room : ''));
+    if (ob.funeral) lines.push('발인: ' + fmtDT(ob.funeral));
+    const ms = (ob.mourners || []).filter(m => m.name).map(m => m.name); if (ms.length) lines.push('상주: ' + ms.join(', '));
+    lines.push('부고장: ' + this.obitLink(ob.id));
+    return lines.join('\n');
+  }
+  openSend(kind, id) {
+    const ob = this.state.store.obits[id]; if (!ob) return;
+    this.setState({ send: { kind, obitId: id, step: 1, tab: 'file', rows: [], paste: '', text: this.smsDefault(kind, ob), pay: 'card', agree: false, results: null, fileMsg: '', fileMsgErr: false, ocrBusy: false, progress: 0, loaded: false }, route: { name: 'send', id } });
+  }
+  updSend(p) { this.setState(s => ({ send: Object.assign({}, s.send, typeof p === 'function' ? p(s.send) : p) })); }
+  addRows(list, source, opts) {
+    const rows = list.map(r => ({ id: uid('r'), name: (r.name || '').trim(), phone: fmtPhone(r.phone), selected: opts && opts.selected === false ? false : true, needsCheck: !!r.needsCheck, source }));
+    this.updSend(sd => Object.assign({ rows: sd.rows.concat(rows), step: 2 }, opts && opts.loaded ? { loaded: true } : {}));
+    this.toast(rows.length + '명을 명단에 추가했어요.');
+  }
+  updRow(id, p) { this.updSend(sd => ({ rows: sd.rows.map(r => r.id === id ? Object.assign({}, r, p) : r) })); }
+  handleListFile(f) {
+    if (!f) return; const n = f.name.toLowerCase();
+    if (/\.(csv|txt|tsv)$/.test(n) || f.type === 'text/csv') {
+      const fr = new FileReader(); fr.onload = () => { const rows = parseListText(fr.result); if (!rows.length) this.updSend({ fileMsg: '파일에서 이름·전화번호를 찾지 못했어요. 첫 칸 이름, 둘째 칸 번호 형식인지 확인해주세요.', fileMsgErr: true }); else { this.updSend({ fileMsg: '', fileMsgErr: false }); this.addRows(rows, 'csv'); } }; fr.readAsText(f, 'utf-8');
+    } else if (/\.(xlsx|xls)$/.test(n)) this.updSend({ fileMsg: '엑셀(.xlsx/.xls) 파일은 이 데모에서 직접 읽지 못해요. 엑셀에서 ‘CSV로 저장’한 뒤 다시 올려주세요.', fileMsgErr: true });
+    else if (/^image\//.test(f.type)) this.handleListPhoto(f);
+    else this.updSend({ fileMsg: '지원하지 않는 파일 형식이에요. CSV 파일을 올려주세요.', fileMsgErr: true });
+  }
+  handleListPhoto(f) {
+    if (!f) return; if (!/^image\//.test(f.type)) { this.updSend({ fileMsg: '이미지 파일만 올릴 수 있어요.', fileMsgErr: true }); return; }
+    this.updSend({ ocrBusy: true, fileMsg: '' });
+    IumAI.ocrRecipientsDemo(f).then(r => { this.updSend({ ocrBusy: false, fileMsg: '데모 분석 결과: 실제 사진 내용이 아닌 예시 명단이에요.', fileMsgErr: false }); this.addRows(r.rows, 'ocr'); });
+  }
+  doPay(sv) {
+    const sd = this.state.send; const targets = sv.targets;
+    this.updSend({ step: 5, progress: 5, results: null });
+    clearInterval(this._pi); this._pi = setInterval(() => this.updSend(x => ({ progress: Math.min(92, (x.progress || 0) + 12) })), 150);
+    IumAI.sendSmsDemo(targets).then(res => {
+      clearInterval(this._pi);
+      const results = targets.map(t => { const r = res.find(x => x.id === t.id); return { name: t.name || '(이름 없음)', phone: fmtPhone(t.phone), ok: r ? r.ok : true }; });
+      const okN = results.filter(r => r.ok).length;
+      this.updSend({ progress: 100, results });
+      this.setStore(st => {
+        const next = Object.assign({}, st, { logs: [{ id: uid('lg'), obitId: sd.obitId, kind: sd.kind, count: results.length, ok: okN, total: sv.total, at: new Date().toISOString() }].concat(st.logs) });
+        if (sd.kind === 'obit') { const prev = st.lists[sd.obitId] || []; const map = {}; prev.concat(targets.map(t => ({ name: t.name, phone: fmtPhone(t.phone) }))).forEach(x => { map[digits(x.phone)] = x; }); next.lists = Object.assign({}, st.lists, { [sd.obitId]: Object.keys(map).map(k => map[k]) }); }
+        return next;
+      });
+    });
+  }
+
+  /* ---------- 감사장 ---------- */
+  thanksDraftFor(id) {
+    if (this.state.thanksDraft && this.state.thanksDraft.obitId === id) return this.state.thanksDraft;
+    const t = this.state.store.thanks[id]; if (t) return { obitId: id, design: t.design, message: t.message };
+    return { obitId: id, design: 'classic', message: THANKS_DESIGNS[0].message };
+  }
+  saveThanks(id, td) {
+    if (!td.message.trim()) { this.setState({ thanksErr: true }); return; }
+    this.setStore(st => { const prev = st.thanks[id]; return Object.assign({}, st, { thanks: Object.assign({}, st.thanks, { [id]: { id: prev ? prev.id : uid('th'), design: td.design, message: td.message, savedAt: new Date().toISOString() } }) }); });
+    this.setState({ thanksErr: false, thanksDraft: td }); this.toast('감사장을 저장했어요. 링크가 만들어졌어요.');
+  }
+
+  /* ---------- 화면 데이터 ---------- */
+  buildCard(o, mode, id) {
+    const rel = relById(o.religion); const dl = fmtDateLong(o.deathDate);
+    const mourners = groupMourners(o.mourners);
+    const h = o.hall || {}; const hallLine = [(h.name || '').trim(), (h.room || '').trim()].filter(Boolean).join(' ');
+    const address = (h.address || '').trim();
+    const schedule = [];
+    if (o.encoffin && parseYMD(o.encoffin)) schedule.push({ label: '입관', value: fmtDT(o.encoffin) });
+    if (o.funeral && parseYMD(o.funeral)) schedule.push({ label: '발인', value: fmtDT(o.funeral) });
+    if ((o.burial || '').trim()) schedule.push({ label: '장지', value: o.burial.trim() });
+    const accounts = (o.accounts || []).filter(a => (a.number || '').trim()).map(a => ({ meta: [a.bank, a.holder ? '예금주 ' + a.holder : ''].filter(x => (x || '').trim()).join(' · ') || '계좌', number: a.number.trim(), copyLabel: (a.bank || '') + ' 계좌번호 복사', copy: () => this.copyText(a.number.trim(), '계좌번호를 복사했어요.') }));
+    const conds = id ? (this.state.store.condolences[id] || []).map(c => ({ name: c.name, msg: c.msg, at: fmtStamp(c.at) })) : [];
+    const preview = mode === 'preview';
+    const photo = o.photo && o.photo.src ? o.photo : null;
+    return {
+      design: o.design || 'chrys', name: (o.name || '').trim() || '○○○', nameCls: ((o.name || '').trim() ? '' : 'ph') + ((o.name || '').trim().replace(/\s/g, '').length >= 6 ? ' long' : ''),
+      hasAge: !!(o.age || '').trim(), age: (o.age || '').trim(),
+      lead: (dl ? dl + ' ' : '') + rel.verb + '하셨기에',
+      hasPhoto: !!photo, noPhoto: !photo, photoCls: photo ? 'has-photo' : 'no-photo', photoSrc: photo ? photo.src : '', photoTransform: photo ? 'translate(' + (photo.x || 0) + '%, ' + (photo.y || 0) + '%) scale(' + (photo.zoom || 1) + ')' : 'none',
+      mourners, hasMourners: mourners.length > 0,
+      hasPlace: !!(hallLine || address), hasHallLine: !!hallLine, hallLine, hasAddress: !!address, address,
+      mapUrl: 'https://map.naver.com/p/search/' + encodeURIComponent(address), routeUrl: 'https://map.kakao.com/?q=' + encodeURIComponent(address),
+      copyAddr: () => this.copyText(address, '주소를 복사했어요.'),
+      showWreath: !!o.wreathOn && !!(hallLine || address),
+      wreath: () => { if (preview) this.toast('부고장을 만든 뒤 받는 사람 화면에서 주문할 수 있어요.'); else this.setState({ wreath: { obitId: id, productId: null, step: 'select', sender: '', phone: '', ribbon: RIBBONS[0], room: h.room || '', errors: {} }, route: { name: 'wreath', id } }); },
+      schedule, hasSchedule: schedule.length > 0,
+      message: (o.message || '').trim(), hasMessage: !!(o.message || '').trim(),
+      accounts, hasAccounts: accounts.length > 0,
+      condolenceOn: !!o.condolenceOn, conds, hasCond: conds.length > 0, noCond: conds.length === 0,
+      condEmpty: preview ? '받는 분이 남긴 메시지가 여기에 보여요. (미리보기에서는 등록되지 않아요)' : '첫 조문 메시지를 남겨주세요.',
+      submitCond: () => { if (preview) this.toast('미리보기에서는 등록되지 않아요. 부고장을 만든 뒤 받는 사람 화면에서 남길 수 있어요.'); else this.addCondolence(id); }
+    };
+  }
+
+  renderVals() {
+    const S = this.state, st = S.store, r = S.route || { name: 'create' }, d = st.draft;
+    const rn = r.name; const ob = r.id ? st.obits[r.id] : null;
+    const needs = ['manage', 'view', 'thanks', 'thanksView', 'send', 'wreath', 'gifts'];
+    let missing = needs.indexOf(rn) >= 0 && !ob;
+    if ((rn === 'send' && !S.send) || (rn === 'wreath' && !S.wreath) || (rn === 'gifts' && !S.gift)) missing = true;
+    if (rn === 'thanksView' && ob && !st.thanks[ob.id]) missing = true;
+    const is = n => !missing && rn === n;
+    const isCreate = rn === 'create', isList = rn === 'list', isManage = is('manage'), isView = is('view'), isThanks = is('thanks'), isThanksView = is('thanksView');
+    const isSend = is('send'), isWreath = is('wreath'), isGifts = is('gifts');
+    const wsOn = isCreate || isManage || isView || isThanks || isThanksView;
+    const tabbed = isCreate || isThanks; const solo = isView || isThanksView;
+    const goCreate = () => this.go('create'); const goList = () => this.go('list');
+    const backToManage = () => this.go('manage', r.id);
+
+    const v = {
+      goCreate, goList, backToManage, backToThanks: () => this.go('thanks', r.id),
+      navCreateCls: isCreate ? 'on' : '', navListCls: (isList || isManage) ? 'on' : '',
+      storageWarn: S.storageWarn, wsOn, wsCls: (solo ? 'solo' : 'split') + (tabbed ? ' tabbed tab-' + S.mobileTab : ''),
+      isCreate, isList, isManage, isView, isThanks, isThanksView, isSend, isWreath, isGifts, isMissing: missing,
+      tabbed, tabEditOn: S.mobileTab === 'edit', tabPrevOn: S.mobileTab === 'preview', tabEditCls: S.mobileTab === 'edit' ? 'on' : '', tabPrevCls: S.mobileTab === 'preview' ? 'on' : '',
+      tabEdit: () => this.setState({ mobileTab: 'edit' }), tabPreview: () => this.setState({ mobileTab: 'preview' }),
+      toast: S.toast, noop: () => {}, stop: e => e.stopPropagation(),
+      selectAll: e => { try { e.target.select(); } catch (x) {} },
+      showObitCard: isCreate || isManage || isView, showThanksCard: isThanks || isThanksView,
+      showPreviewLabel: isCreate || isManage || isThanks,
+      previewLabel: isThanks ? '감사장 미리보기' : (isCreate ? '실시간 미리보기 · 받는 분에게 보이는 화면' : '받는 분에게 보이는 화면'),
+      condName: S.condName, condMsg: S.condMsg, condErr: S.condErr,
+      onCondName: e => this.setState({ condName: e.target.value, condErr: '' }), onCondMsg: e => this.setState({ condMsg: e.target.value, condErr: '' }),
+      hasModal: !!S.modal, modal: S.modal || {}, modalKakao: !!S.modal && S.modal.type === 'kakao', modalCopyFallback: !!S.modal && S.modal.type === 'copy', modalConfirmNew: !!S.modal && S.modal.type === 'confirmNew',
+      closeModal: () => this.setState({ modal: null }), confirmNew: () => this.newObit(),
+      modalCopy: () => { const l = S.modal && S.modal.link; this.setState({ modal: null }); if (l) this.copyText(l, '링크를 복사했어요. 카카오톡 대화방에 붙여넣어 주세요.'); }
+    };
+
+    /* ----- 카드 ----- */
+    const cardSrc = isCreate ? d : ob;
+    v.card = (v.showObitCard && cardSrc) ? this.buildCard(cardSrc, isCreate ? 'preview' : 'live', isCreate ? null : ob.id) : this.buildCard(emptyObit(), 'preview', null);
+
+    /* ----- 제작 화면 ----- */
+    if (isCreate) {
+      const set = k => e => this.patchDraft({ [k]: e.target.value });
+      v.d = Object.assign({}, d, { photo: d.photo || { src: '', zoom: 1, x: 0, y: 0 } });
+      v.createTitle = st.editingId && st.obits[st.editingId] ? '부고장 수정' : '부고장 만들기';
+      v.saveLabel = st.editingId && st.obits[st.editingId] ? '수정 내용 저장하기' : '부고장 만들기';
+      v.askNew = () => this.setState({ modal: { type: 'confirmNew' } });
+      v.on = {
+        name: set('name'), age: e => this.patchDraft({ age: e.target.value.replace(/[^\d]/g, '').slice(0, 3) }), deathDate: set('deathDate'),
+        hallName: e => { this.setHall('name', e.target.value); this.setState({ hallFocus: true }); }, hallAddress: e => this.setHall('address', e.target.value), hallRoom: e => this.setHall('room', e.target.value),
+        encoffin: set('encoffin'), funeral: set('funeral'), burial: set('burial'), message: set('message'),
+        photoZoom: e => this.setPhoto('zoom', e.target.value), photoX: e => this.setPhoto('x', e.target.value), photoY: e => this.setPhoto('y', e.target.value)
+      };
+      v.nameErr = S.formErr.name || ''; v.hasNameErr = !!S.formErr.name; v.nameErrCls = S.formErr.name ? 'bad' : ''; v.nameInvalid = !!S.formErr.name;
+      v.ageErr = !!(d.age && !/^\d{1,3}$/.test(d.age)); v.ageErrCls = v.ageErr ? 'bad' : '';
+      v.scheduleWarn = !!(d.encoffin && d.funeral && d.funeral < d.encoffin);
+      v.chat = S.chat.map(m => ({ cls: m.role, text: m.text, demo: !!m.demo, images: m.images || [], hasImages: !!(m.images && m.images.length), hasActions: !!(m.actions && m.actions.length), actions: (m.actions || []).map(a => ({ label: a.label, cls: a.cls || (a.type === 'sample' ? 'primary' : ''), run: () => this.runAction(a) })) }));
+      v.chatBusy = S.chatBusy; v.chatInput = S.chatInput; v.chatSendDisabled = S.chatBusy || !S.chatInput.trim();
+      v.chatExamples = ['발인은 11월 6일 오전 8시로 바꿔줘', '상주에 딸 김지연을 추가해줘', '안내 말씀을 짧고 정중하게 써줘', '화환은 받지 않을게'].map(t => ({ label: t, run: () => this.sendChat(t) }));
+      v.runSample = () => this.runSample(); v.sendChat = () => this.sendChat();
+      v.onChatInput = e => this.setState({ chatInput: e.target.value });
+      v.onChatKey = e => { const comp = e.isComposing || (e.nativeEvent && e.nativeEvent.isComposing) || e.keyCode === 229; if (e.key === 'Enter' && !e.shiftKey && !comp) { e.preventDefault(); this.sendChat(); } };
+      v.onChatFile = e => { const fs = e.target.files; this.handleChatFiles(fs); try { e.target.value = ''; } catch (x) {} };
+      v.chatDragCls = S.chatDrag ? 'drag' : '';
+      v.chatDragOver = e => { e.preventDefault(); if (!S.chatDrag) this.setState({ chatDrag: true }); };
+      v.chatDragLeave = () => this.setState({ chatDrag: false });
+      v.chatDrop = e => { e.preventDefault(); this.setState({ chatDrag: false }); const dt = e.dataTransfer; if (dt && dt.files && dt.files.length) this.handleChatFiles(dt.files); else if (dt) { const t = dt.getData('text'); if (t) this.setState({ chatInput: t }); } };
+      v.setChatEl = el => { this.chatEl = el; };
+      v.designs = DESIGNS.map(x => ({ id: x.id, name: x.name, desc: x.desc, checked: d.design === x.id, cls: d.design === x.id ? 'on' : '', pick: () => this.patchDraft({ design: x.id }) }));
+      v.religions = RELIGIONS.map(x => ({ id: x.id, label: x.label, hint: '○월 ○일 ' + x.verb + '하셨기에 삼가 알려드립니다.', checked: d.religion === x.id, cls: d.religion === x.id ? 'on' : '', pick: () => this.patchDraft({ religion: x.id }) }));
+      v.mourners = d.mourners.map((m, i) => ({ relId: 'mr-rel-' + m.id, nameId: 'mr-name-' + m.id, relLabel: (i + 1) + '번째 상주 관계', nameLabel: (i + 1) + '번째 상주 성함', rel: m.rel || '', name: m.name || '', delLabel: (i + 1) + '번째 상주 삭제', onRel: e => this.updMourner(m.id, 'rel', e.target.value), onName: e => this.updMourner(m.id, 'name', e.target.value), del: () => this.delMourner(m.id) }));
+      v.addMourner = () => this.updDraft(x => Object.assign({}, x, { mourners: x.mourners.concat([blankMourner()]) }));
+      const q = (d.hall.name || '').replace(/\s/g, '');
+      const res = DEMO_HALLS.filter(h => !q || h.name.replace(/\s/g, '').indexOf(q) >= 0 || q.indexOf(h.name.replace(/\s/g, '')) >= 0);
+      const exact = DEMO_HALLS.some(h => h.name === d.hall.name);
+      v.hallOpen = S.hallFocus && !exact; v.hallOpenStr = v.hallOpen ? 'true' : 'false';
+      v.hallResults = res.map(h => ({ name: h.name, address: h.address, pick: e => { if (e && e.preventDefault) e.preventDefault(); this.updDraft(x => Object.assign({}, x, { hall: Object.assign({}, x.hall, { name: h.name, address: h.address }) })); this.setState({ hallFocus: false }); } }));
+      v.hallNoResult = res.length === 0;
+      v.hallFocus = () => this.setState({ hallFocus: true });
+      v.hallBlur = () => { setTimeout(() => this.setState({ hallFocus: false }), 180); };
+      v.wreathCls = d.wreathOn ? 'on' : ''; v.wreathState = d.wreathOn ? '켬' : '끔';
+      v.wreathHint = d.wreathOn ? (d.hall.name || d.hall.address ? '조문객이 부고장에서 화환을 주문할 수 있어요.' : '빈소 정보를 입력하면 부고장에 버튼이 나타나요.') : '부고장에 화환 버튼이 보이지 않아요.';
+      v.toggleWreath = () => this.patchDraft({ wreathOn: !d.wreathOn });
+      v.condCls = d.condolenceOn ? 'on' : ''; v.condState = d.condolenceOn ? '켬' : '끔';
+      v.toggleCond = () => this.patchDraft({ condolenceOn: !d.condolenceOn });
+      v.guides = GUIDES.map(g => ({ label: g.label, cls: d.message === g.text ? 'on' : '', pick: () => this.patchDraft({ message: g.text }) }));
+      v.hasMessage = !!d.message; v.messageCount = (d.message || '').length; v.clearMessage = () => this.patchDraft({ message: '' });
+      v.accounts = d.accounts.map((a, i) => ({ bankId: 'ac-bank-' + a.id, numId: 'ac-num-' + a.id, holderId: 'ac-holder-' + a.id, bank: a.bank || '', number: a.number || '', holder: a.holder || '', delLabel: (i + 1) + '번째 계좌 삭제', onBank: e => this.updAccount(a.id, 'bank', e.target.value), onNumber: e => this.updAccount(a.id, 'number', e.target.value.replace(/[^\d\- ]/g, '')), onHolder: e => this.updAccount(a.id, 'holder', e.target.value), del: () => this.updDraft(x => Object.assign({}, x, { accounts: x.accounts.filter(y => y.id !== a.id) })) }));
+      v.noAccounts = d.accounts.length === 0;
+      v.addAccount = () => this.updDraft(x => Object.assign({}, x, { accounts: x.accounts.concat([{ id: uid('a'), bank: '', number: '', holder: '' }]) }));
+      v.hasPhoto = !!(d.photo && d.photo.src); v.noPhoto = !v.hasPhoto;
+      v.photoTransform = v.hasPhoto ? 'translate(' + (d.photo.x || 0) + '%, ' + (d.photo.y || 0) + '%) scale(' + (d.photo.zoom || 1) + ')' : 'none';
+      v.photoErr = S.photoErr; v.photoDragCls = S.photoDrag ? 'drag' : '';
+      v.onPhotoFile = e => { const f = e.target.files && e.target.files[0]; this.handlePhotoFile(f); try { e.target.value = ''; } catch (x) {} };
+      v.photoDragOver = e => { e.preventDefault(); if (!S.photoDrag) this.setState({ photoDrag: true }); };
+      v.photoDragLeave = () => this.setState({ photoDrag: false });
+      v.photoDrop = e => { e.preventDefault(); this.setState({ photoDrag: false }); const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]; this.handlePhotoFile(f); };
+      v.resetPhoto = () => this.updDraft(x => x.photo ? Object.assign({}, x, { photo: Object.assign({}, x.photo, { zoom: 1, x: 0, y: 0 }) }) : x);
+      v.removePhoto = () => this.patchDraft({ photo: null });
+      v.saveObit = () => this.saveObit();
+    } else {
+      v.d = { hall: {}, photo: {} }; v.on = {};
+    }
+
+    /* ----- 관리 ----- */
+    if (isManage) {
+      const id = ob.id; const th = st.thanks[id]; const list = st.lists[id] || []; const logs = st.logs.filter(l => l.obitId === id);
+      const smsLogs = logs.filter(l => l.kind === 'obit');
+      v.mg = {
+        name: ob.name, created: fmtStamp(ob.createdAt), updated: fmtStamp(ob.updatedAt), link: this.obitLink(id),
+        condCount: (st.condolences[id] || []).length,
+        sendTag: smsLogs.length ? '부고 문자 발송 ' + smsLogs.length + '회 (데모)' : '부고 문자 발송 전',
+        thanksTag: th ? '감사장 저장됨' : '감사장 없음', thanksBtn: th ? '감사장 열기' : '감사장 만들기',
+        hasList: list.length > 0, listCount: list.length,
+        hasLogs: logs.length > 0, logs: logs.map(l => ({ title: (l.kind === 'obit' ? '부고 문자 ' : '감사장 문자 ') + l.count + '명 · 성공 ' + l.ok + '명', meta: fmtStamp(l.at) + ' · ' + won(l.total) + ' (예시)' })),
+        copyLink: () => this.copyText(this.obitLink(id), '부고장 링크를 복사했어요.'),
+        view: () => this.go('view', id), edit: () => this.editObit(id), kakao: () => this.openKakao('obit', ob),
+        send: () => this.openSend('obit', id),
+        thanks: () => this.setState({ thanksDraft: null, thanksErr: false, route: { name: 'thanks', id }, mobileTab: 'edit' }),
+        gifts: () => this.setState({ gift: { obitId: id, step: 'list', productId: null, qty: 0, name: '', phone: '', address: '', memo: '', tried: false, from: 'manage' }, route: { name: 'gifts', id } })
+      };
+    } else v.mg = {};
+
+    /* ----- 감사장 ----- */
+    v.tc = {}; v.tv = {}; v.tDesigns = [];
+    if ((isThanks || isThanksView) && ob) {
+      const id = ob.id; const saved = st.thanks[id];
+      const td = isThanks ? this.thanksDraftFor(id) : { design: saved.design, message: saved.message };
+      const gm = groupMourners(ob.mourners); const mline = gm.map(g => (g.rel ? g.rel + ' ' : '') + g.names).join(' · ');
+      v.tc = { design: td.design, name: ob.name, message: td.message.trim() || ' ', date: kstMonth(), hasMourners: gm.length > 0, mournerLine: mline };
+      if (isThanks) {
+        const setTd = p => this.setState({ thanksDraft: Object.assign({}, td, p), thanksErr: false });
+        v.tDesigns = THANKS_DESIGNS.map(x => ({ name: x.name, desc: x.desc, mini: x.mini, checked: td.design === x.id, cls: td.design === x.id ? 'on' : '', pick: () => { const cur = THANKS_DESIGNS.find(y => y.id === td.design); setTd({ design: x.id, message: (!td.message.trim() || (cur && td.message === cur.message)) ? x.message : td.message }); } }));
+        const dirty = !saved || saved.design !== td.design || saved.message !== td.message;
+        v.tv = {
+          name: ob.name, mournerLineOrDash: mline || '부고장에 입력된 상주가 없어요', message: td.message, count: td.message.length, err: S.thanksErr,
+          onMessage: e => setTd({ message: e.target.value }),
+          resetMsg: () => setTd({ message: THANKS_DESIGNS.find(y => y.id === td.design).message }),
+          save: () => this.saveThanks(id, td), saveLabel: saved ? (dirty ? '변경 내용 저장하기' : '저장됨') : '감사장 저장하고 링크 만들기',
+          saved: !!saved, dirtySaved: !!saved && dirty, link: saved ? this.thanksLink(saved) : '',
+          copyLink: () => this.copyText(this.thanksLink(st.thanks[id]), '감사장 링크를 복사했어요.'),
+          view: () => this.go('thanksView', id), kakao: () => this.openKakao('thanks', ob),
+          send: () => this.openSend('thanks', id),
+          sendDesc: (st.lists[id] || []).length ? '부고 문자 발송 명단(' + st.lists[id].length + '명)을 불러와 받을 분을 고른 뒤 보낼 수 있어요.' : '명단을 올려 감사장 문자를 일괄 발송해요. 명단이 없어도 링크 공유는 무료로 쓸 수 있어요.'
+        };
+      }
+    }
+
+    /* ----- 목록 ----- */
+    v.obitList = st.order.filter(id => st.obits[id]).map(id => { const o = st.obits[id]; return { name: o.name, meta: [o.deathDate ? fmtDateLong(o.deathDate) + ' ' + relById(o.religion).verb : '', o.hall && o.hall.name, '수정 ' + fmtStamp(o.updatedAt)].filter(Boolean).join(' · '), view: () => this.go('view', id), manage: () => this.go('manage', id) }; });
+    v.listEmpty = v.obitList.length === 0;
+
+    /* ----- 일괄 발송 ----- */
+    v.sv = { steps: [], tabs: [], rows: [], results: [], pays: [] };
+    if (isSend) {
+      const sd = S.send; const id = sd.obitId; const rows = rowsWithStatus(sd.rows);
+      const targets = rows.filter(x => x.selected && x.status === 'ok');
+      const bytes = smsBytes(sd.text); const type = bytes <= 90 ? 'sms' : 'lms'; const unit = PRICE[type]; const total = unit * targets.length;
+      const stepNames = ['명단 추가', '명단 정리', '문구 확인', '결제 확인', '발송 결과'];
+      const canLoad = sd.kind === 'thanks' && (st.lists[id] || []).length > 0 && !sd.loaded;
+      const toStep = n => () => this.updSend({ step: n });
+      const results = sd.results || [];
+      const sv = {
+        title: sd.kind === 'obit' ? '부고 문자 한 번에 발송하기' : '감사장 문자로 한 번에 보내기', name: ob.name,
+        back: () => this.setState({ send: null, route: { name: sd.kind === 'obit' ? 'manage' : 'thanks', id } }), backLabel: sd.kind === 'obit' ? '부고장 관리로' : '감사장으로',
+        steps: stepNames.map((n, i) => ({ label: (i + 1) + '. ' + n, cls: sd.step === i + 1 ? 'on' : (sd.step > i + 1 ? 'done' : '') })),
+        s1: sd.step === 1, s2: sd.step === 2, s3: sd.step === 3, s4: sd.step === 4, s5: sd.step === 5,
+        canLoad, loadCount: (st.lists[id] || []).length,
+        loadList: () => { this.addRows(st.lists[id], 'loaded', { selected: false, loaded: true }); },
+        tabs: [['file', '엑셀·CSV 파일'], ['paste', '목록 붙여넣기'], ['photo', '명단 사진·캡처'], ['manual', '직접 입력']].map(t => ({ label: t[1], on: sd.tab === t[0], cls: sd.tab === t[0] ? 'on' : '', pick: () => this.updSend({ tab: t[0], fileMsg: '' }) })),
+        tabFile: sd.tab === 'file', tabPaste: sd.tab === 'paste', tabPhoto: sd.tab === 'photo', tabManual: sd.tab === 'manual',
+        onFile: e => { const f = e.target.files && e.target.files[0]; this.handleListFile(f); try { e.target.value = ''; } catch (x) {} },
+        onPhoto: e => { const f = e.target.files && e.target.files[0]; this.handleListPhoto(f); try { e.target.value = ''; } catch (x) {} },
+        paste: sd.paste, onPaste: e => this.updSend({ paste: e.target.value }),
+        applyPaste: () => { const l = parseListText(sd.paste); if (!l.length) this.updSend({ fileMsg: '붙여넣은 내용에서 이름·번호를 찾지 못했어요.', fileMsgErr: true }); else { this.updSend({ paste: '', fileMsg: '' }); this.addRows(l, 'paste'); } },
+        addRowGo: () => this.updSend(x => ({ rows: x.rows.concat([{ id: uid('r'), name: '', phone: '', selected: true, needsCheck: false, source: 'manual' }]), step: 2 })),
+        addSample: () => this.addRows(SAMPLE_LIST, 'sample'),
+        ocrBusy: sd.ocrBusy, fileMsg: sd.fileMsg, fileMsgCls: sd.fileMsgErr ? 'err' : 'hint',
+        rowCount: rows.length, noRows: rows.length === 0,
+        toStep1: toStep(1), toStep2: () => { if (rows.length) this.updSend({ step: 2 }); }, toStep3: () => { if (targets.length) this.updSend({ step: 3 }); }, toStep4: () => { if (sd.text.trim() && bytes <= 2000) this.updSend({ step: 4 }); },
+        loadedHint: !!sd.loaded,
+        total: rows.length, selCount: targets.length, noSel: targets.length === 0,
+        checkCount: rows.filter(x => x.status === 'check').length, dupCount: rows.filter(x => x.status === 'dup').length, badCount: rows.filter(x => x.status === 'invalid' || x.status === 'missing').length, noDup: !rows.some(x => x.status === 'dup'),
+        selectAll: () => this.updSend(x => ({ rows: x.rows.map(y => Object.assign({}, y, { selected: true })) })),
+        selectNone: () => this.updSend(x => ({ rows: x.rows.map(y => Object.assign({}, y, { selected: false })) })),
+        removeDup: () => { const dupIds = rows.filter(x => x.status === 'dup').map(x => x.id); this.updSend(x => ({ rows: x.rows.filter(y => dupIds.indexOf(y.id) < 0) })); this.toast('중복 번호 ' + dupIds.length + '건을 정리했어요.'); },
+        addRow: () => this.updSend(x => ({ rows: x.rows.concat([{ id: uid('r'), name: '', phone: '', selected: true, needsCheck: false, source: 'manual' }]) })),
+        rows: rows.map((x, i) => ({
+          name: x.name, phone: x.phone, checked: x.selected && x.status === 'ok', locked: x.status !== 'ok',
+          selLabel: (x.name || (i + 1) + '번째') + ' 발송 대상 선택', delLabel: (x.name || (i + 1) + '번째 행') + ' 삭제',
+          statusLabel: STATUS_LABEL[x.status], badgeCls: 'b-' + x.status, phoneCls: (x.status === 'invalid' || x.status === 'missing') ? 'bad' : '', isCheck: x.status === 'check',
+          toggle: e => this.updRow(x.id, { selected: e.target.checked }), onName: e => this.updRow(x.id, { name: e.target.value }), onPhone: e => this.updRow(x.id, { phone: e.target.value }),
+          confirm: () => this.updRow(x.id, { needsCheck: false, selected: true }), del: () => this.updSend(sx => ({ rows: sx.rows.filter(y => y.id !== x.id) }))
+        })),
+        text: sd.text, onText: e => this.updSend({ text: e.target.value }), resetText: () => this.updSend({ text: this.smsDefault(sd.kind, ob) }),
+        bytes, typeLabel: type === 'sms' ? '단문(SMS, 90byte 이하)' : '장문(LMS, 2,000byte 이하)', typeShort: type === 'sms' ? '단문 SMS' : '장문 LMS',
+        tooLong: bytes > 2000, tooLongOrEmpty: bytes > 2000 || !sd.text.trim(),
+        unitLabel: won(unit), totalLabel: won(total),
+        pays: [['card', '신용·체크카드 (데모)'], ['easy', '간편결제 (데모)']].map(p => ({ label: p[1], checked: sd.pay === p[0], cls: sd.pay === p[0] ? 'on' : '', pick: () => this.updSend({ pay: p[0] }) })),
+        agree: sd.agree, noAgree: !sd.agree, onAgree: e => this.updSend({ agree: e.target.checked }),
+        sending: sd.step === 5 && !sd.results, finished: sd.step === 5 && !!sd.results, progress: sd.progress || 0, progressPct: (sd.progress || 0) + '%',
+        results: results.map(x => ({ name: x.name, phone: x.phone, label: x.ok ? '성공 (예시)' : '실패 (예시: 수신 불가)', cls: x.ok ? 'b-ok' : 'b-fail' })),
+        okCount: results.filter(x => x.ok).length, failCount: results.filter(x => !x.ok).length,
+        savedNote: sd.kind === 'obit' ? '이 발송 명단은 부고장에 저장되어, 나중에 감사장 문자를 보낼 때 다시 불러올 수 있어요.' : '감사장 발송 기록이 부고장 관리에 남았어요.'
+      };
+      sv.pay = () => { if (sd.agree && targets.length) this.doPay({ targets, total }); };
+      v.sv = sv;
+    }
+
+    /* ----- 근조화환 ----- */
+    v.wv = { products: [], ribbons: [] };
+    if (isWreath) {
+      const w = S.wreath; const id = w.obitId; const p = WREATHS.find(x => x.id === w.productId);
+      const upd = q => this.setState(s => ({ wreath: Object.assign({}, s.wreath, q) }));
+      const chief = (ob.mourners || []).filter(m => m.name)[0];
+      const e = w.errors || {};
+      v.wv = {
+        name: ob.name, back: () => this.setState({ wreath: null, route: { name: 'view', id } }),
+        isSelect: w.step === 'select', isForm: w.step === 'form', isDone: w.step === 'done',
+        products: WREATHS.map(x => ({ name: x.name, desc: x.desc, priceLabel: won(x.price), isStand: x.kind === 'stand', isObje: x.kind === 'obje', isBasket: x.kind === 'basket', on: w.productId === x.id, cls: w.productId === x.id ? 'on' : '', pick: () => upd({ productId: x.id }) })),
+        noProduct: !p, toForm: () => { if (p) upd({ step: 'form' }); }, toSelect: () => upd({ step: 'select' }),
+        hallName: (ob.hall && ob.hall.name) || '-', address: (ob.hall && ob.hall.address) || '-', chief: chief ? (chief.rel ? chief.rel + ' ' : '') + chief.name : '-',
+        room: w.room, onRoom: ev => upd({ room: ev.target.value }),
+        sender: w.sender, onSender: ev => upd({ sender: ev.target.value }), senderErr: !!e.sender, senderErrCls: e.sender ? 'bad' : '',
+        phone: w.phone, onPhone: ev => upd({ phone: ev.target.value }), phoneErr: !!e.phone, phoneErrCls: e.phone ? 'bad' : '',
+        ribbon: w.ribbon, onRibbon: ev => upd({ ribbon: ev.target.value }), ribbonErr: !!e.ribbon, ribbonErrCls: e.ribbon ? 'bad' : '', ribbonOrDash: w.ribbon || '-',
+        ribbons: RIBBONS.map(t => ({ label: t, cls: w.ribbon === t ? 'on' : '', pick: () => upd({ ribbon: t }) })),
+        productName: p ? p.name : '-', priceLabel: p ? won(p.price) : '-', orderNo: w.orderNo || '',
+        pay: () => {
+          const errs = { sender: !w.sender.trim(), phone: !validPhone(w.phone), ribbon: !w.ribbon.trim() };
+          if (errs.sender || errs.phone || errs.ribbon) { upd({ errors: errs }); this.toast('입력 내용을 확인해주세요.'); return; }
+          const orderNo = 'DEMO-W' + Date.now().toString().slice(-6);
+          this.setStore(stx => Object.assign({}, stx, { orders: [{ id: orderNo, type: 'wreath', obitId: id, product: p.name, price: p.price, at: new Date().toISOString() }].concat(stx.orders) }));
+          upd({ step: 'done', orderNo, errors: {}, phone: fmtPhone(w.phone) });
+        }
+      };
+    }
+
+    /* ----- 답례품 ----- */
+    v.gv = { products: [], p: {} };
+    if (isGifts) {
+      const g = S.gift; const id = g.obitId; const p = GIFTS.find(x => x.id === g.productId);
+      const upd = q => this.setState(s => ({ gift: Object.assign({}, s.gift, q) }));
+      const qty = parseInt(g.qty, 10) || 0; const qtyErr = !!p && qty < p.min;
+      const formBad = !g.name.trim() || !validPhone(g.phone) || !g.address.trim();
+      v.gv = {
+        back: () => this.setState({ gift: null, route: { name: 'manage', id } }), backLabel: '부고장 관리로',
+        isList: g.step === 'list', isDetail: g.step === 'detail' && !!p, isDone: g.step === 'done' && !!p,
+        products: GIFTS.map(x => ({ name: x.name, desc: x.desc, min: x.min, priceLabel: won(x.price), isRice: x.kind === 'rice', isTea: x.kind === 'tea', isTowel: x.kind === 'towel', isNut: x.kind === 'nut', open: () => upd({ step: 'detail', productId: x.id, qty: x.min, tried: false }) })),
+        p: p ? { name: p.name, desc: p.desc, detail: p.detail, min: p.min, priceLabel: won(p.price) } : {},
+        qty: g.qty, qtyErr, onQty: ev => upd({ qty: ev.target.value.replace(/[^\d]/g, '').slice(0, 4) }),
+        dec: () => upd({ qty: Math.max(p ? p.min : 1, qty - 10) }), inc: () => upd({ qty: qty + 10 }),
+        name: g.name, phone: g.phone, address: g.address, memo: g.memo,
+        onName: ev => upd({ name: ev.target.value }), onPhone: ev => upd({ phone: ev.target.value }), onAddress: ev => upd({ address: ev.target.value }), onMemo: ev => upd({ memo: ev.target.value }),
+        nameErrCls: g.tried && !g.name.trim() ? 'bad' : '', phoneErrCls: g.tried && !validPhone(g.phone) ? 'bad' : '', addrErrCls: g.tried && !g.address.trim() ? 'bad' : '',
+        formErr: g.tried && formBad,
+        totalLabel: p ? won(p.price * qty) : '-', orderNo: g.orderNo || '',
+        toList: () => upd({ step: 'list', productId: null }),
+        pay: () => {
+          if (qtyErr || formBad) { upd({ tried: true }); this.toast('입력 내용을 확인해주세요.'); return; }
+          const orderNo = 'DEMO-G' + Date.now().toString().slice(-6);
+          this.setStore(stx => Object.assign({}, stx, { orders: [{ id: orderNo, type: 'gift', obitId: id, product: p.name, qty, price: p.price * qty, at: new Date().toISOString() }].concat(stx.orders) }));
+          upd({ step: 'done', orderNo, phone: fmtPhone(g.phone) });
+        }
+      };
+    }
+    return v;
+  }
+}
+</script>
+</body>
+</html>
